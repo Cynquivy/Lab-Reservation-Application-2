@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0F172A;
+    color: #F8FAFC;
+    font-family: Roboto, sans-serif;
+}
+
+.banner {
+    background-image: linear-gradient(rgba(15,23,42,0.6), rgba(15,23,42,0.6)), url('../images/hero.png');
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;   
+    background-position: center center;
+    position: relative;
+}
+
+.banner header {
+    padding: 15px;
+    color: #F8FAFC;
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.85);
+    height: 30px;
+}   
+
+.home-nav {
+    display: flex;
+    position: relative;
+    padding: 10px 90px;
+    font-family: Roboto;
+    text-transform: uppercase;
+    left: -25px;
+}
+
+.home-nav .logo a {
+    background-image: url("../images/logo1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 170px;
+    text-indent: -999999px;
+    position: relative;
+    margin: 0 -20px 0 -30px;
+    top: -55px;
+}
+
+.home-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;  
+}
+
+.home-nav li {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+.home-nav li:first-child {
+    margin-left: 0;
+}
+
+.home-nav a {
+    text-decoration: none;
+    color: #F8FAFC;
+    transition: transform .2s;
+    display: inline-block;
+}
+
+.home-nav a:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.home-nav div {
+   margin-left: auto;
+   position: relative;
+}
+
+.dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    background-color: #1E293B;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #F8FAFC;
+}
+
+.dropdown-content a:hover {
+    background-color: #374151;
+    transform: none;
+}
+
+.home-nav .dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hero {
+    color: #1F2937;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    padding: 0 100px;
+    margin-top: 180px;
+}
+
+.hero p {
+    margin-top: -12px;
+    font-family: 'Inter';
+    font-weight: 400;
+    color: #E0E7FF;
+}
+
+.hero-buttons {
+    display: flex;
+}
+
+.hero-buttons a {
+    font-family: 'Inter';
+    font-weight: 600;
+    text-decoration: none;
+    color: #F8FAFC;
+    padding: 10px;
+    display: inline-block;
+    margin-left: 50px
+}
+
+.hero-buttons a:first-of-type {
+    margin-left: 0;
+}
+
+.hero-buttons .btn-primary { 
+    background-color: #5B8DEF;
+    border-radius: 25px;
+    transition: transform .2s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.hero-buttons .btn-primary:hover {
+    transform: scale(1.1);
+    background-color: #7BA6F8;
+}
+
+.hero-buttons .btn-secondary { 
+    background-color: #A3D4FA;
+    border-radius: 25px;
+    transition: transform .2s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.hero-buttons .btn-secondary:hover {
+    transform: scale(1.1);
+    background-color: #A3D4FA;
+}
+
+.hero-text h1 {
+    font-weight: 700;
+    font-family: 'Poppins';
+    max-width: 400px;
+    color: #E0E7FF;
+}
+
+.guide {
+    padding: 80px 10%;
+    text-align: center;
+}
+
+.guide h2 {
+    font-size: 36px;
+    margin-bottom: 50px;
+    color: #A3D4FA;
+    margin-top: -30px;
+}
+
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.step {
+    background: #1E293B;
+    padding: 35px 25px;
+    width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #F8FAFC;
+}
+
+.step:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.step h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #A3D4FA;
+}
+
+.step p {
+    font-size: 16px;
+    color: #E0E7FF;
+    line-height: 1.6;
+}
+
+
+@media screen and (max-width: 1023px) {
+    .home-nav{
+        padding-left: 30px;  
+        padding-right: 30px; 
+        font-size: 12px;
+        top: 3px;
+    }
+}
+
+@media screen and (max-width: 775px) {
+    .home-nav{
+        font-size: 10px;
+    }
+
+    .home-nav .logo a {
+        width: 150px;
+        height: 120px;
+        top:-41px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .home-nav{
+        font-size: 8px;
+    }
+}
