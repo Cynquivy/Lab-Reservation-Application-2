@@ -67,7 +67,7 @@ body {
 .home-nav a {
     text-decoration: none;
     color: #F8FAFC;
-    transition: transform .2s;
+    transition: transform .2s ease;
     display: inline-block;
 }
 
@@ -154,7 +154,7 @@ body {
 .hero-buttons .btn-secondary { 
     background-color: #A3D4FA;
     border-radius: 25px;
-    transition: transform .2s;
+    transition: transform .2s ease;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
@@ -216,6 +216,91 @@ body {
     line-height: 1.6;
 }
 
+.features {
+    padding: 100px 12%;
+    background-color: #020617;
+}
+
+.features h2 {
+    font-size: 38px;
+    color: #E0E7FF;
+    margin-bottom: 70px;
+    text-align: left;
+}
+
+.feature-body {
+    position: relative;
+    padding-left: 40px;
+}
+
+.features-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 60px;
+}
+
+.features-image img {
+    width: 100%;
+    height: 500px;
+    display: block;
+    margin-left: auto;
+    border-radius: 20px;
+}
+
+.feature-body::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, #5B8DEF, transparent);
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 60px;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(8px);
+}
+
+.feature-icon {
+    width: 38px;
+    height: 38px;
+    background: #5B8DEF;
+    color: #020617;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 6px rgb(75, 70, 70)
+}
+
+.feature-content{
+    margin-top: -15px;
+}
+
+.feature-content h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #A3D4FA;
+}
+
+.feature-content p {
+    font-size: 16px;
+    color: #CBD5F5;
+    line-height: 1.7;
+    max-width: 520px;
+}
 
 @media screen and (max-width: 1023px) {
     .home-nav{
