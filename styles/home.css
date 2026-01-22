@@ -9,6 +9,11 @@ body {
     font-family: Roboto, sans-serif;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
 .banner {
     background-image: linear-gradient(rgba(15,23,42,0.6), rgba(15,23,42,0.6)), url('../images/hero.png');
     height: 100vh;
@@ -29,7 +34,7 @@ body {
 
 .home-nav {
     display: flex;
-    position: relative;
+    flex-grow: 1;
     padding: 10px 90px;
     font-family: Roboto;
     text-transform: uppercase;
