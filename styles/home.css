@@ -9,11 +9,6 @@ body {
     font-family: Roboto, sans-serif;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-}
-
 .banner {
     background-image: linear-gradient(rgba(15,23,42,0.6), rgba(15,23,42,0.6)), url('../images/hero.png');
     height: 100vh;
@@ -34,7 +29,7 @@ body {
 
 .home-nav {
     display: flex;
-    flex-grow: 1;
+    position: relative;
     padding: 10px 90px;
     font-family: Roboto;
     text-transform: uppercase;
@@ -305,6 +300,66 @@ body {
     color: #CBD5F5;
     line-height: 1.7;
     max-width: 520px;
+}
+
+.cta {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #0e172a;
+    padding: 5rem;
+}
+
+.cta h2 {
+    color: #020617;
+    font-size: 4rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.cta-container {
+    display: flex;
+    flex-direction: row;
+    flex-direction: flex-start;
+    background-color: #A3D4FA;
+    border-radius: 16px;
+    width: 70%;
+    padding: 50px 30px 50px 30px;
+}
+
+.cta-information-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0.9;
+    justify-content: center;
+}
+
+.cta-information-container p {
+    color: #020617;
+    font-size: 1.25rem;
+}
+
+.cta-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cta-button-container a {
+    color: #A3D4FA;
+    background-color: #020617;;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 2rem;
+    margin: 0.5rem;
+    padding: 0.4rem;
+    padding-right: 3rem;
+    padding-left: 3rem;
+    text-align: center;
+}
+
+.footer {
+
 }
 
 @media screen and (max-width: 1023px) {
