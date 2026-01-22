@@ -364,8 +364,12 @@ body {
     transform: scale(1.1);
 }
 
-.footer {
-
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #020617;
+    padding: 10px;
 }
 
 @media screen and (max-width: 1023px) {
