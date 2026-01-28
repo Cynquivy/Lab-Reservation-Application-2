@@ -17,7 +17,7 @@ const DIV = `
                         <i class="form__input-icon fa-regular fa-user"></i>
                     </div>
                     <div class="form__input-box">
-                        <input class="form__input" id="sign-up-password-field" type="text" placeholder="Password" required>
+                        <input class="form__input" id="sign-up-password-field" type="password" placeholder="Password" required>
                         <i class="form__input-icon fa-solid fa-lock"></i>
                     </div>
                     <button class="form__button" type="button" id="sign-up">
@@ -44,7 +44,7 @@ const DIV = `
                             <i class="form__input-icon fa-regular fa-user"></i>
                         </div>
                         <div class="form__input-box">
-                            <input class="form__input" id="log-in-password-field" type="text" placeholder="Password">
+                            <input class="form__input" id="log-in-password-field" type="password" placeholder="Password">
                             <i class="form__input-icon fa-solid fa-lock"></i>
                         </div>
                         <button class="form__button form__button--dark" type="button" id="log-in">
