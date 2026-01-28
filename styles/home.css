@@ -456,6 +456,11 @@ footer {
     text-transform: uppercase;
 }
 
+.form__input-box {
+    position: relative;
+    width: 100%;
+}
+
 .form__input {
     border: none;
     box-sizing: border-box;
@@ -463,10 +468,19 @@ footer {
     border-radius: 10px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
     padding: 15px 15px;
-    margin: 10px;
+    /* margin: 10px; */
+    margin: 10px 0px;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(20px);
+}
+
+.form__input-icon {
+    position: absolute;
+    top: 38%;
+    margin: 0;
+    padding: 0;
+    right: 8px;
 }
 
 .form__input:focus {
@@ -497,11 +511,20 @@ footer {
     scale: 1.05;
 }
 
+.form__error {
+    color: red;
+    font-size: 0.7rem;
+    margin: -7px 0;
+    padding: 0;
+}
+
 .form__panel {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: rgba(91, 141, 239, 0.5);
+    /* background-color: rgba(255, 255, 255, 0.3); */
+    backdrop-filter: blur(30px);
     width: 100%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;

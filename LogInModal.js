@@ -3,22 +3,54 @@ const DIV = `
             <div class="form">
                 <div class="form__content" id="sign-in-content">
                     <h1>Sign Up</h1>
-                    <button class="form__button" type="button">Sign in with Google</button>
+                    <button class="form__button" type="button">
+                        <i class="fa-brands fa-google"></i>
+                        Sign in with Google
+                    </button>
                     <p>or use your email password</p>
-                    <input class="form__input" type="text" placeholder="Username">
-                    <input class="form__input" type="text" placeholder="Password">
-                    <button class="form__button" type="button">Sign in</button>
+                    <p class="is-hidden form__error" id="error-sign-up">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        Invalid Email or Password
+                    </p>
+                    <div class="form__input-box">
+                        <input class="form__input" id="sign-up-email-field" type="text" placeholder="Email" required>
+                        <i class="form__input-icon fa-regular fa-user"></i>
+                    </div>
+                    <div class="form__input-box">
+                        <input class="form__input" id="sign-up-password-field" type="text" placeholder="Password" required>
+                        <i class="form__input-icon fa-solid fa-lock"></i>
+                    </div>
+                    <button class="form__button" type="button" id="sign-up">
+                        Sign up
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
                 <div class="form__panel" id="log-in-card">
                     <div class="form__content" >
                         <h4 id="hiddable">Already have an account?</h4>
                         <button class="form__button form__button--outline" id="log-in-transition" type="button">Log In</button>
                         <h1>Log In</h1>
-                        <button class="form__button form__button--dark" type="button">Log in with Google</button>
+                        <button class="form__button form__button--dark" type="button">
+                            <i class="fa-brands fa-google"></i>
+                            Log in with Google
+                        </button>
                         <p>or use your email password</p>
-                        <input class="form__input" type="text" placeholder="Username">
-                        <input class="form__input" type="text" placeholder="Password">
-                        <button class="form__button form__button--dark" type="button">Log in</button>
+                        <p class="is-hidden form__error" id="error-log-in">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            Invalid Email
+                        </p>
+                        <div class="form__input-box">
+                            <input class="form__input" id="log-in-email-field" type="text" placeholder="Email">
+                            <i class="form__input-icon fa-regular fa-user"></i>
+                        </div>
+                        <div class="form__input-box">
+                            <input class="form__input" id="log-in-password-field" type="text" placeholder="Password">
+                            <i class="form__input-icon fa-solid fa-lock"></i>
+                        </div>
+                        <button class="form__button form__button--dark" type="button" id="log-in">
+                            Log in
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                         <h4>Don't have an account?</h4>
                         <button class="form__button form__button--outline" id="sign-up-transition" type="button">Sign Up</button>
                     </div>
@@ -26,7 +58,7 @@ const DIV = `
             </div>
         </div>
 `
-
+const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>` 
 /**
  * LogInModal
  * 
@@ -41,6 +73,7 @@ const DIV = `
  */
 /*export*/ class LogInModal {
     //this is ideally exported elsewhere, but i cant do export/imports without a server i think?
+
     /**
     * Creates in log in modal
     * 
@@ -64,9 +97,67 @@ const DIV = `
         document.body.style.overflow = '';
     }
 
+    /**
+     * Gets the text fields on sign up page
+     * 
+     * @returns {{ email: string, password: string }}
+     */
+    getSignUpFields() {
+        return {
+            email: this._signUpEmailField.value,
+            password: this._signUpPasswordField.value
+        };
+    }
+
+    /**
+     * Gets the text fields on sign up page
+     * 
+     * @returns {{ email: string, password: string }}
+     */
+    getLogInFields() {
+        return {
+            email: this._logInEmailField.value,
+            password: this._logInPasswordField.value
+        };
+    }
+    /**
+    * Displays an error on the sign up modal
+    *
+    * @param errorMessage (string) - displays this message. Default: Invalid Email
+    */
+    displayErrorSignUp(errorMessage = `Invalid Email`) {
+        if (errorMessage === undefined) {
+            console.warn(`LogInModal Warning: You might have forgot to put an error message`);
+        }
+        const message = ERROR_ICON + errorMessage;
+        this._errorSingUp.innerHTML = message;
+        this._errorSingUp.classList.remove(`is-hidden`);
+    }
+
+    /**
+    * Displays an error on the log in modal
+    *
+    * @param errorMessage (string) - displays this message. Default: Invalid Email or Password
+    */
+    displayErrorLogIn(errorMessage = `Invalid Email or Password`) {
+        if (errorMessage === undefined) {
+            console.warn(`LogInModal Warning: You might have forgot to put an error message`);
+        }
+        const message = ERROR_ICON + errorMessage;
+        this._errorLogIn.innerHTML = message;
+        this._errorLogIn.classList.remove(`is-hidden`);
+    }
+
+    /**
+    * Hides both error messages
+    */
+    hideErrorMessages() {
+        this._errorSingUp.classList.add(`is-hidden`);
+        this._errorLogIn.classList.add(`is-hidden`);
+    }
+
     _init(mode) {
-        //BUG: This doesnt work & idk why
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        window.scrollTo(0, 0);
 
         this._modal = document.createElement("div");
         this._modal.innerHTML = DIV;
@@ -86,6 +177,14 @@ const DIV = `
         this._logInCard = this._modal.querySelector("#log-in-card");
         this._signInContent = this._modal.querySelector("#sign-in-content");
         this._hiddableH4 = this._modal.querySelector("#hiddable");
+        this._errorSingUp = this._modal.querySelector("#error-sign-up");
+        this._errorLogIn = this._modal.querySelector("#error-log-in");
+        this._signUp = this._modal.querySelector("#sign-up");
+        this._logIn = this._modal.querySelector("#log-in");
+        this._logInEmailField = this._modal.querySelector("#log-in-email-field");
+        this._logInPasswordField = this._modal.querySelector("#log-in-password-field");
+        this._signUpEmailField = this._modal.querySelector("#sign-up-email-field");
+        this._signUpPasswordField = this._modal.querySelector("#sign-up-password-field");
 
         this._logInTransition.addEventListener("click", () => {
             this._modeLogIn();
@@ -93,6 +192,25 @@ const DIV = `
 
         this._signUpTransition.addEventListener("click", () => {
             this._modeSignUp();
+        })
+
+        //TEST: There are for testing
+        this._signUp.addEventListener("click",  () => {
+            this.hideErrorMessages();
+
+            const {email, password} = this.getSignUpFields();
+            if (password === `invalid`)
+                this.displayErrorSignUp();
+
+        })
+
+        //TEST: There are for testing
+        this._logIn.addEventListener("click",  () => {
+            this.hideErrorMessages();
+
+            const {email, password} = this.getLogInFields();
+            if (password === `invalid`)
+                this.displayErrorLogIn(`Invalid Password`);
         })
 
         //when clicking off the modal
