@@ -433,6 +433,7 @@ main table tbody tr:last-child td{
 .quick-actions .primary-btn {
     background: var(--color-success);
     color: #000;
+    font-family: poppins, sans-serif;
 }
 
 .recent-activity ul {
