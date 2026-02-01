@@ -38,26 +38,26 @@ const VELASCO_FLOORS = `
 
 const reservation_form = document.getElementById('reservation_form');
 const floor_select = document.getElementById('floors');
+const floors = {
+    'GH': GOKS_FLOORS,
+    'STRC': STRC_FLOORS,
+    'SJ': SJ_FLOORS,
+    'LS': LS_FLOORS,
+    'MH': MIGUEL_FLOORS,
+    'VH': VELASCO_FLOORS
+}
 
 const handleBuildingChange = (obj) => {
     populateFloor(obj);
 }
 
 function populateFloor(event) {
-    var floors = {
-        'GH': floor_select.innerHTML = GOKS_FLOORS,
-        'STRC': floor_select.innerHTML = STRC_FLOORS,
-        'SJ': floor_select.innerHTML = SJ_FLOORS,
-        'LS': floor_select.innerHTML = LS_FLOORS,
-        'MH': floor_select.innerHTML = MIGUEL_FLOORS,
-        'VH': floor_select.innerHTML = VELASCO_FLOORS
-    }
 
     try {
-        floors[event.value]();
+        floor_select.innerHTML = floors[event.value];
     }
     catch(err) {
         // Defaults to Goks
-        floors['GH']();
+        floor_select.innerHTML = floors['GH'];
     }
 }
