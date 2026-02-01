@@ -235,30 +235,66 @@ select {
 
 .form-container {
     display: flex;
-    align-items: center;
-    padding: 20px;
     height: 65vh;
+    gap: 20px;
+    align-items: center;
+}
+
+.form-information-container,
+.form-image-container {
+    flex-grow: 1;
+    height: 65vh;
+    display: flex;
+    padding: 20px;
     border-radius: 20px;
     background-color: var(--color-light);
 }
 
+.form-information-container {
+    align-items: center;
+}
+
+.form-image-container {
+    flex-grow: 4;
+}
+
+.form-information-container form {
+    flex-grow: 1;
+}
+
 form p {
-    margin-bottom: 1rem;
+    margin-bottom: 1.4rem;
 }
 
 label {
     margin-right: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.vertical-divider {
+    border-right: 1px solid var(--color-dark-variant);
+    height: 90%;
 }
 
 .info-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
     padding: 20px;
     height: 20vh;
     margin-bottom: 20px;
     border-radius: 20px;
     background-color: var(--color-light);
+}
+
+.info-container p {
+    font-size: 1.5rem;
+    max-width: 55ch;
+}
+
+.info-container h1 {
+    font-size: 2rem;
 }
 
 #buildings, #floors, #rooms, #capacities {
@@ -275,4 +311,14 @@ input[type='submit'] {
     border-radius: 5px;
     color: var(--color-info-light);
     background-color: var(--color-dark);
+}
+
+.info-container-logo {
+    height: 100px;
+    width: 85px;
+}
+
+.info-container-logo image {
+    height: 150px;
+    width: 100px;
 }
