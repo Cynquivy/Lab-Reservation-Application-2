@@ -256,7 +256,7 @@ main .profile{
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+    display: none;
 }
 
 main .date input[type='date']{
