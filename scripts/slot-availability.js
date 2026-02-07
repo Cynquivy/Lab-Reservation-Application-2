@@ -9,7 +9,7 @@
 // > slot object has availability and a unique slot no that identifies where it is
 // > reservation has a slot id attached to it and contains other details like who reserved it etc
 
-const info_container = document.querySelector('.information-section');
+const info_container = document.querySelector('.availability-section');
 const heading = info_container.querySelector('h1');
 
 const today = new Date();
