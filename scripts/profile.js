@@ -23,6 +23,7 @@ const upcomingReservations = [
     {
         studentID: "12345678",
         lab: "GK302B",
+        datetimeRequested: "Yesterday 6:30 AM",
         datetime: "Today 10:00-11:30",
         seat: "Seat 14",
         status: "Upcoming",
@@ -31,6 +32,7 @@ const upcomingReservations = [
     {
         studentID: "12345678",
         lab: "GK301",
+        datetimeRequested: "Today 11:30 AM",
         datetime: "Tomorrow 1:00-2:30",
         seat: "Seat 8",
         status: "1 Day",
@@ -147,6 +149,7 @@ function showUpcomingReservations() {
     reservations.forEach(r => {
         const row = document.createElement("tr");
         row.innerHTML = `<td>${r.lab}</td>
+                         <td>${r.datetimeRequested}</td>
                          <td>${r.datetime}</td>
                          <td>${r.seat}</td>
                          <td class="${r.statusClass}">${r.status}</td>`;
