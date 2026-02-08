@@ -436,7 +436,7 @@ footer {
     backdrop-filter: blur(20px);
     box-shadow: 5px 5px 15px black;
     border-radius: 15px;
-    height: 535px;
+    height: 550px;
     width: 30%;
 }
 
@@ -447,13 +447,18 @@ footer {
     flex-direction: column;
     align-items: center;
     width: 60%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     transition: opacity 0.1s ease-in;
 }
 
 .form__content h1 {
     text-transform: uppercase;
+}
+
+.form__content h2 {    
+    font-size: 0.9rem;
+    font-weight: 100;
 }
 
 .form__input-box {
@@ -551,6 +556,23 @@ footer {
     border-color: white;
     border-style: solid;
     border-width: 2px;
+}
+
+.form__remember-me {
+    display: flex;
+    flex-direction: row;
+    margin-top: -15px;
+    /* margin-bottom: -26px; */
+}
+
+.form__remember-me-checkbox {
+    margin-right: 5px;
+    border-style: none;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form__remember-me p {
+    font-size: 1rem;
 }
 
 

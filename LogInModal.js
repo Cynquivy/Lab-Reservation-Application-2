@@ -7,7 +7,7 @@ const DIV = `
                         <i class="fa-brands fa-google"></i>
                         Sign in with Google
                     </button>
-                    <p>or use your email password</p>
+                    <h2>or use your email password</h2>
                     <p class="is-hidden form__error" id="error-sign-up">
                         <i class="fa-solid fa-circle-exclamation"></i>
                         Invalid Email or Password
@@ -24,6 +24,10 @@ const DIV = `
                         Sign up
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
+                    <div class="form__remember-me">
+                        <input type="checkbox" id="remember-me1" class="form__remember-me-checkbox">
+                        <p>Remember me</p>
+                    </div>
                 </div>
                 <div class="form__panel" id="log-in-card">
                     <div class="form__content" >
@@ -34,7 +38,7 @@ const DIV = `
                             <i class="fa-brands fa-google"></i>
                             Log in with Google
                         </button>
-                        <p>or use your email password</p>
+                        <h2>or use your email password</h2>
                         <p class="is-hidden form__error" id="error-log-in">
                             <i class="fa-solid fa-circle-exclamation"></i>
                             Invalid Email
@@ -51,6 +55,10 @@ const DIV = `
                             Log in
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
+                        <div class="form__remember-me">
+                            <input type="checkbox" id="remember-me2" class="form__remember-me-checkbox">
+                            <p>Remember me</p>
+                        </div>
                         <h4>Don't have an account?</h4>
                         <button class="form__button form__button--outline" id="sign-up-transition" type="button">Sign Up</button>
                     </div>
@@ -100,24 +108,26 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
     /**
      * Gets the text fields on sign up page
      * 
-     * @returns {{ email: string, password: string }}
+     * @returns {{ email: string, password: string, rememberMe: boolean}}
      */
     getSignUpFields() {
         return {
             email: this._signUpEmailField.value,
-            password: this._signUpPasswordField.value
+            password: this._signUpPasswordField.value,
+            rememberMe: this._rememberMe1.checked || this._rememberMe2.checked,
         };
     }
 
     /**
      * Gets the text fields on sign up page
      * 
-     * @returns {{ email: string, password: string }}
+     * @returns {{ email: string, password: string, rememberMe: boolean}}
      */
     getLogInFields() {
         return {
             email: this._logInEmailField.value,
-            password: this._logInPasswordField.value
+            password: this._logInPasswordField.value,
+            rememberMe: this._rememberMe1.checked || this._rememberMe2.checked,
         };
     }
     /**
@@ -185,6 +195,8 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
         this._logInPasswordField = this._modal.querySelector("#log-in-password-field");
         this._signUpEmailField = this._modal.querySelector("#sign-up-email-field");
         this._signUpPasswordField = this._modal.querySelector("#sign-up-password-field");
+        this._rememberMe1 = this._modal.querySelector("#remember-me1");
+        this._rememberMe2 = this._modal.querySelector("#remember-me2");
 
         this._logInTransition.addEventListener("click", () => {
             this._modeLogIn();
@@ -223,6 +235,21 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
             this.close();
             console.log(`test lol`);
         });
+
+        this._signUp.addEventListener("click", () => {
+            console.log(this.getSignUpFields());
+        })
+
+        this._logIn.addEventListener("click", () => {
+            console.log(this.getLogInFields());
+        })
+
+        this._rememberMe1.addEventListener("click", () => {
+            this._syncRememberMe(1)
+        });
+        this._rememberMe2.addEventListener("click", () => {
+            this._syncRememberMe(2)}
+        );
     }
 
     _modeLogIn() {
@@ -237,6 +264,21 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
         this._logInTransition.classList.remove("is-transparent");
         this._logInCard.classList.remove("form__panel--active")
         this._signInContent.classList.remove("is-transparent");
+    }
+
+    /**
+    * Syncs both remember me checkboxes
+    *
+    * @param whichBox (1 | 2) tells which box was click
+    */
+    _syncRememberMe(whichBox) {
+        if (whichBox !== 1 && whichBox !== 2)
+            console.error("Log In Modal Error: Invalid arg! whichBox must be either 1 or 2");
+
+        if (whichBox === 1)
+            this._rememberMe2.checked = !this._rememberMe2.checked;
+        else
+            this._rememberMe1.checked = !this._rememberMe1.checked;
     }
 }
 
