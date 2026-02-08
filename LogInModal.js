@@ -102,6 +102,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
     */
     close() {
         this._modal.remove();
+        this._css.remove();
         document.body.style.overflow = '';
     }
 
@@ -168,6 +169,12 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
     _init(mode) {
         window.scrollTo(0, 0);
+
+        this._css = document.createElement("link")
+        this._css.rel = "stylesheet";
+        this._css.type = "text/css";
+        this._css.href = 'styles/log-in-modal.css';
+        document.head.appendChild(this._css);
 
         this._modal = document.createElement("div");
         this._modal.innerHTML = DIV;
