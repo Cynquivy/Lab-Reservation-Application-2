@@ -283,6 +283,7 @@ input[type="date"] {
 }
 
 .search-table{
+    flex-grow: 1;
     table-layout: fixed; 
     height: 100px;
 }
