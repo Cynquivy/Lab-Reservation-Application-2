@@ -212,6 +212,11 @@ const BUILDING_DATA = {
     ]
 }
 
+function redirectToSeatReservation() {
+    // probably will change to http request later
+    window.location.replace('seat-reservation.html');
+}
+
 function populateTable(roomCode, floor) {
     const rooms = BUILDING_DATA[`${roomCode.toUpperCase()}_${floor}`];
     const search_table = document.querySelector('.search-table');
@@ -224,6 +229,14 @@ function populateTable(roomCode, floor) {
 
         for (var i = 1; i < 11; i++) {
             row.insertCell(i);
+        }
+    }
+
+    const cells = document.querySelectorAll('td');
+
+    for (var i = 0; i < cells.length; i++) {
+        if (cells[i].className != 'room-data') {
+            cells[i].addEventListener('click', redirectToSeatReservation);
         }
     }
 }

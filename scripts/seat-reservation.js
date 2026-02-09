@@ -1,0 +1,501 @@
+
+const M101_TEXT = `
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 45rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 10rem; height: 3rem; margin-left:39.3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 45rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 10rem; height: 3rem; margin-left:45.3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 48rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+`
+
+const M101_HEADER = `M101 - Material Testing Laboratory`
+
+const M104D_TEXT = `
+    <div class="display-seat-row"> 
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 3rem; height: 5rem; margin-left:35.3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 3rem; height: 5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 3rem; height: 5rem; margin-left:35.3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 3rem; height: 5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 3rem; height: 8rem; margin-left:3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        </svg>
+    </div>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left:42rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <div class="display-seat-row">
+        <svg style="width: 10rem; height: 3rem; margin-left:39.3rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+        </svg>
+    </div>
+`
+
+const M104D_HEADER = `M104D - Ece Thesis Room`;
+
+const GK301_TEXT = `
+    <div class="display-seat-row" style="margin-top: 2rem;">
+    <svg style="width: 13.5rem; height: 2.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 49rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    </div>
+    <div class="display-seat-row"> 
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 49rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    </div>
+    <div class="display-seat-row">
+    <svg style="width: 13.5rem; height: 2.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    </div>
+    <div class="display-seat-row"> 
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    </div>
+    <div class="display-seat-row">
+    <svg style="width: 13.5rem; height: 2.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    </div>
+    <div class="display-seat-row"> 
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    </div>
+    <div class="display-seat-row">
+    <svg style="width: 13.5rem; height: 2.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <svg style="width: 13.5rem; height: 2.5rem; margin-left: 17rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="700" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    </div>
+    <div class="display-seat-row"> 
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+    <svg style="width: 3.5rem; height: 3.5rem; margin-left: 17rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <svg style="width: 3.5rem; height: 3.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    </div>
+`
+
+const GK301_HEADER = `GK301 - Computer Lab`;
+
+const GK302B_TEXT =  `
+    <div class="display-seat-row">
+        <div style="margin-left:17.5rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div style="margin-right:10.5rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="display-seat-row">
+        <div style="margin-left:17.5rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div style="margin-right:10.5rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="display-seat-row">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+
+        <div style="margin-left:12.1rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div style="margin-right:10.5rem;">
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+            <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>
+        </div>
+    </div>
+
+    <svg style="width: 4rem; height: 4rem; margin-left: 52.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+
+`
+
+const GK302B_HEADER = `GK302B - Computer Lab`;
+
+const SJ605_TEXT = `
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 30rem; height: 5rem; margin-left:23rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="1500" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 4.5rem; height: 4.5rem; margin-left: 5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 30rem; height: 5rem; margin-left:23rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="1500" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+`
+
+const SJ605_HEADER = `SJ605 - Microbiology Research Lab`;
+
+const seats = {
+    'SJ605': { SJ605_HEADER, SJ605_TEXT},
+    'GK301': { GK301_HEADER, GK301_TEXT},
+    'GK302B': { GK302B_HEADER, GK302B_TEXT},
+    'M104D': { M104D_HEADER, M104D_TEXT},
+    'M101': { M101_HEADER, M101_TEXT}
+}
+
+const display_seat = document.querySelector('.display-seat');
+const header_container = document.querySelector('.seat-reservation-information');
+const heading = header_container.querySelector('h1');
+
+function displayAvailableSeats(roomCode) {
+    const room = seats[roomCode];
+
+    if (!room) 
+        return;
+
+    heading.textContent = room[`${roomCode}_HEADER`];
+    display_seat.innerHTML += room[`${roomCode}_TEXT`];
+}
+
+function initialize(roomCode) {
+    displayAvailableSeats(roomCode);
+}
+
+initialize('GK301');
