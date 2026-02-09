@@ -1,12 +1,11 @@
 
-const M101 = `
+const M101_TEXT = `
     <div class="display-seat-row"> 
         <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
             <circle r="45" cx="50" cy="50" fill="#8FC991" />
         </svg>
     </div>
     <div class="display-seat-row"> 
-        </svg>
         <svg style="width: 4.5rem; height: 4.5rem; margin-left: 45rem" viewBox="0 0 100 100" preserveAspectRatio="none">
             <circle r="45" cx="50" cy="50" fill="#8FC991" />
         </svg>
@@ -42,7 +41,9 @@ const M101 = `
     </div>
 `
 
-const M104D = `
+const M101_HEADER = `M101 - Material Testing Laboratory`
+
+const M104D_TEXT = `
     <div class="display-seat-row"> 
     </div>
     <div class="display-seat-row"> 
@@ -94,7 +95,9 @@ const M104D = `
     </div>
 `
 
-const GK301 = `
+const M104D_HEADER = `M104D - Ece Thesis Room`;
+
+const GK301_TEXT = `
     <div class="display-seat-row" style="margin-top: 2rem;">
     <svg style="width: 13.5rem; height: 2.5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
         <rect width="700" height="100" style="fill:var(--color-info-dark)" />
@@ -252,7 +255,9 @@ const GK301 = `
     </div>
 `
 
-const GK304 =  `
+const GK301_HEADER = `GK301 - Computer Lab`;
+
+const GK302B_TEXT =  `
     <div class="display-seat-row">
         <div style="margin-left:17.5rem;">
             <svg style="width: 4rem; height: 4rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -419,7 +424,9 @@ const GK304 =  `
 
 `
 
-const SJ605 = `
+const GK302B_HEADER = `GK302B - Computer Lab`;
+
+const SJ605_TEXT = `
     <div class="display-seat-row"> 
         <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
             <circle r="45" cx="50" cy="50" fill="#8FC991" />
@@ -463,6 +470,32 @@ const SJ605 = `
     </div>
 `
 
-function displayAvailableSeats() {
+const SJ605_HEADER = `SJ605 - Microbiology Research Lab`;
 
+const seats = {
+    'SJ605': { SJ605_HEADER, SJ605_TEXT},
+    'GK301': { GK301_HEADER, GK301_TEXT},
+    'GK302B': { GK302B_HEADER, GK302B_TEXT},
+    'M104D': { M104D_HEADER, M104D_TEXT},
+    'M101': { M101_HEADER, M101_TEXT}
 }
+
+const display_seat = document.querySelector('.display-seat');
+const header_container = document.querySelector('.seat-reservation-information');
+const heading = header_container.querySelector('h1');
+
+function displayAvailableSeats(roomCode) {
+    const room = seats[roomCode];
+
+    if (!room) 
+        return;
+
+    heading.textContent = room[`${roomCode}_HEADER`];
+    display_seat.innerHTML += room[`${roomCode}_TEXT`];
+}
+
+function initialize(roomCode) {
+    displayAvailableSeats(roomCode);
+}
+
+initialize('GK301');
