@@ -217,7 +217,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">9</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -246,7 +246,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">12</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -275,7 +275,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">15</text>>
                 </svg>
                 <div class="seat-dropdown">
@@ -325,7 +325,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">18</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -354,7 +354,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">21</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -384,7 +384,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="  0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">24</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -434,7 +434,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">27</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -463,7 +463,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">30</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -493,7 +493,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="  0 0 100 100">
-                    <circle r="45" cx="50" cy="50"" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
                     <text class="number" x="50" y="55">33</text>
                 </svg>
                 <div class="seat-dropdown">
