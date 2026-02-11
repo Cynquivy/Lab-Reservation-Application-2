@@ -696,7 +696,7 @@ const GK302A_TEXT =  `
         <rect width="100" height="700" style="fill:var(--color-info-dark)" />
     </svg>
     <div class="seat col">
-         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
             <circle r="45" cx="50" cy="50" fill="#8FC991" />
         </svg>  
         <div class="seat-dropdown">
@@ -784,7 +784,7 @@ const GK302A_TEXT =  `
                 <p>Status: Available</p>
             </div>
         </div>
-        <div class="seat col">
+        <div class="seat col">  
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
                 <circle r="45" cx="50" cy="50" fill="#8FC991" />
             </svg>

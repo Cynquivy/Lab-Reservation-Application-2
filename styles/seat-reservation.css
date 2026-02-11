@@ -380,3 +380,10 @@ svg {
     flex-direction: column;
     display: flex;
 }
+
+.corner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
