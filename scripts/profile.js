@@ -19,6 +19,17 @@ const inputs = document.querySelectorAll(".profile-form input");
 let tableVisible = false;
 let formsActive = false;
 
+const accountJSON = sessionStorage.getItem("account");
+
+if (accountJSON) {
+    const account = JSON.parse(accountJSON);
+
+    const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]');
+    if (dashboardLink && account.accountType === "Admin") {
+        dashboardLink.href = "dashboard-admin.html";
+    }
+}
+
 const upcomingReservations = [
     {
         studentID: "12345678",
@@ -105,8 +116,8 @@ saveBtn.addEventListener("click", (e) => {
             case "Enter your student ID":
                 document.getElementById("studentID").textContent = input.value;
                 break;
-            case "Enter your address":
-                document.getElementById("address").textContent = input.value;
+            case "Enter your course":
+                document.getElementById("course").textContent = input.value;
                 break;
             case "Enter your contact number":
                 document.getElementById("contactNumber").textContent = input.value;
