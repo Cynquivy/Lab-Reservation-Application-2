@@ -105,8 +105,8 @@ saveBtn.addEventListener("click", (e) => {
             case "Enter your student ID":
                 document.getElementById("studentID").textContent = input.value;
                 break;
-            case "Enter your address":
-                document.getElementById("address").textContent = input.value;
+            case "Enter your course":
+                document.getElementById("course").textContent = input.value;
                 break;
             case "Enter your contact number":
                 document.getElementById("contactNumber").textContent = input.value;

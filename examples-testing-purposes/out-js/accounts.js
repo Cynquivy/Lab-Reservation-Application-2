@@ -7,7 +7,7 @@ export const accounts = {
         reservations: [
             {
                 id: "R-MLHSJBZ4IY8I",
-                labratory: "GK302B",
+                labratory: "GK302B",    
                 dateTimeRequested: {
                     year: 2026,
                     month: 2,
