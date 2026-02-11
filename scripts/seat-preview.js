@@ -507,299 +507,16 @@ const GK301_TEXT = `
 const GK301_HEADER = `GK301 - Computer Lab`;
 
 const GK302A_TEXT =  `
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col" style="margin-right: 10.5rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <div class="seat col">
-         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-            <circle r="45" cx="50" cy="50" fill="#8FC991" />
-        </svg>  
-        <div class="seat-dropdown">
-            <p>Status: Available</p>
-        </div>
-    </div>
-
-    <div class="seat-group-col" style="margin-left: 9rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-    <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-        <div class="seat col">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            </svg>
-
-            <div class="seat-dropdown">
-                <p>Status: Available</p>
-            </div>
-        </div>
-    </div>
-</div>
-    <svg style="width: 6.8rem; height: 2rem; margin-left: 45.3rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <rect width="100" height="700" style="fill:var(--color-info-dark)" />
-    </svg>
     <div class="display-seat-row row-spread">
-        <div class="seat-group-col" style="margin-left:51.4rem; margin-top: -1rem">
+        <div class="seat-group-col" style="margin-left:17.5rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
             <div class="seat col">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none">
                     <circle r="45" cx="50" cy="50" fill="#8FC991" />
@@ -809,8 +526,291 @@ const GK302A_TEXT =  `
                 </div>
             </div>
         </div>
-    </svg>
-</div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col" style="margin-right:10.5rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="display-seat-row row-spread">
+        <div class="seat-group-col" style="margin-left:17.5rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col" style="margin-right: 10.5rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="display-seat-row row-spread">
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <div class="seat col">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+            </svg>  
+            <div class="seat-dropdown">
+                <p>Status: Available</p>
+            </div>
+        </div>
+
+        <div class="seat-group-col" style="margin-left: 4.85rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col" style="margin-right:10.5rem;">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <svg style="width: 2rem; height: 7rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+
+        <div class="seat-group-col">
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+            <div class="seat col">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                </svg>
+
+                <div class="seat-dropdown">
+                    <p>Status: Available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        <svg style="width: 6.8rem; height: 2rem; margin-left: 53.3rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect width="100" height="700" style="fill:var(--color-info-dark)" />
+        </svg>
+        <div class="display-seat-row row-spread">
+            <div class="seat-group-col" style="margin-left:62.4rem; margin-top: -1rem">
+                <div class="seat col">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    </svg>
+                    <div class="seat-dropdown">
+                        <p>Status: Available</p>
+                    </div>
+                </div>
+            </div>
+        </svg>
+    </div>
 `;
 
 
