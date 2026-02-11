@@ -1,0 +1,451 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #0F172A;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    font-family: poppins, sans-serif;
+    background-color: var(--color-background);
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-white);
+}
+
+.container{
+    width: 100%;
+    margin: 0 auto;
+}
+
+a{
+    color: var(--color-white);
+}
+
+img {
+    display: block;
+    width: 100%;
+}
+
+h1{
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--color-primary);
+}
+
+h2{
+    font-size: 1.4rem;
+}
+
+h3{
+    font-size: 0.87rem;
+}
+
+h4{
+    font-size: 0.8rem;
+}
+
+h5{
+    font-size: 0.77rem;
+}
+
+small{
+    font-size: 0.75rem;
+}
+
+.profile-photo{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.text-muted{
+    color: var(--color-info-dark);
+}
+
+p{
+    color: var(--color-white)
+}
+
+b{
+    color: var(--color-primary)
+}
+
+.primary{
+    color: var(--color-primary)
+}
+
+.danger {
+    color: var(--color-danger);
+    background: rgba(207, 89, 30, 0.757);
+    border-radius: 10px;
+    padding: 2px;
+}
+
+.success {
+    color: var(--color-success);
+    background: rgba(9, 127, 26, 0.66);
+    border-radius: 10px;
+    padding: 2px;
+}
+
+.warning {
+    color: var(--color-warning)
+}
+
+aside{
+    height: 100vh;
+    background: var(--color-light);
+    width: 14rem;
+    position: fixed;
+}
+
+aside .top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.4rem;
+    margin-left: 0.8rem;
+}
+
+aside .logo img{
+    width: 8rem;
+    height: 2rem;
+    transform: translateX(15px);
+}
+
+aside .logo{
+    display: flex;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+aside .logo:hover{
+    transform: scale(1.1);
+}
+
+aside .close{
+    display: none;
+}
+
+aside .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 86vh;
+    position: relative;
+    top: 3rem;
+}
+
+aside h3{
+    font-weight: 500;
+}
+
+aside .sidebar a{
+    display: flex;
+    color: var(--color-info-light);
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 0.3s ease;
+}
+
+
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 0.3s ease;
+}
+
+aside .sidebar a.active{
+    background-color: var(--color-dark);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content: '';
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover{
+   color: var(--color-primary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+main {
+    margin: 1rem 2rem 2rem 2rem;
+    padding-top: 3rem;
+}
+
+main > div {
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-dark);
+    margin-bottom: 2rem;
+}
+
+.seat-reservation-information {
+    min-height: 10vh;
+}
+
+.seat-reservation-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 70vh;
+}
+
+.display-seat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1rem;
+    border-radius: 10px;
+    gap: 0.3rem;
+    background-color: var(--color-info-light);
+    align-items: center;
+}
+
+.background {
+    background-image: url('https://www.iedesign.in/images/gallery_category/interior-projects/mvn-school-laboratory-complex-aravalli-hills/1.jpg');
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    z-index: 0;
+}
+
+.display-seat-row {
+    flex-grow: 0;
+    display: flex;
+    align-items: center; 
+    width: 80%;
+    margin-top: 2rem;
+}
+
+.display-seat > *:not(.background) {
+    position: relative;
+    opacity: 1;
+}
+
+svg {
+    flex-shrink:0;
+    display: block;
+    text-align: center;
+    margin: 0; 
+}
+
+.row-spread {
+    justify-content: space-between;
+}
+
+.seat-group {   
+    display: flex;
+    gap: 1.5rem;
+    margin-top: -10px;
+}
+
+.table {
+    width: 13.5rem; 
+    height: 2.5rem;
+}
+
+.table svg {
+    width: 100%;
+    height: 100%;
+}
+
+.seat svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    transition: all 0.3s ease;
+}
+
+.number{
+    text-anchor: middle;
+    font-size: 40px; 
+    fill: #fff; 
+    dominant-baseline: middle;
+}
+
+.seat svg:hover{
+    transform: scale(1.1);
+}
+
+.seat {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;    
+}
+
+.seat-dropdown {
+    display: none; 
+    position: absolute;
+    top: 110%;           
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+    z-index: 999999999;
+    white-space: nowrap;    
+}
+
+.seat-dropdown p{
+    color: black;
+    text-align: center;
+}
+
+.user{  
+    color: blue;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.user:hover {
+    transform: scale(1.1);
+}
+
+.banner header {
+    padding: 15px;
+    color: #F8FAFC;
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.85);
+    height: 30px;
+}
+
+.home-nav {
+    display: flex;
+    position: relative;
+    padding: 10px 90px;
+    font-family: Roboto;
+    text-transform: uppercase;
+    left: -25px;
+}
+
+.home-nav .logo a {
+    background-image: url("../images/logo1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 170px;
+    text-indent: -999999px;
+    position: relative;
+    margin: 0 -20px 0 -30px;
+    top: -55px;
+}
+
+.home-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.home-nav li {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+.home-nav li:first-child {
+    margin-left: 0;
+}
+
+.home-nav a {
+    text-decoration: none;
+    color: #F8FAFC;
+    transition: transform .2s ease;
+    display: inline-block;
+}
+
+.home-nav a:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.home-nav div {
+    margin-left: auto;
+    position: relative;
+}
+
+.dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    background-color: #1E293B;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #F8FAFC;
+}
+
+.dropdown-content a:hover {
+    background-color: #374151;
+    transform: none;
+}
+
+.home-nav .dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+}
