@@ -847,7 +847,8 @@ const GK306A_TEXT = `
                     <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 </svg>
                 <div class="seat-dropdown">
-                    <p>Status: Available</p>
+                    <p>Status: Not Available</p>
+                    <p>By: <span class="user">Anonymous</span></p>
                 </div>
             </div>
             <div class="seat col">
