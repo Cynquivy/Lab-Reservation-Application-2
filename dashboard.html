@@ -46,7 +46,7 @@
                         </div>
                         <div class="info">
                             <p>Hello, <b>User</b></p>
-                            <small class="text-muted">Student</small>
+                            <small class="text-muted" id="user-type">Student</small>
                         </div>
                         <div class="dropdown-menu">
                             <a href="profile.html">
@@ -106,7 +106,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>2</p>
+                                    <p id="no-reservations">2</p>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>1</p>
+                                    <p id="no-upcoming">1</p>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +133,7 @@
                     <div>
                         <h2>Upcoming Reservations</h2>
                         <div class="upcoming-reservations">
-                            <table>
+                            <table id="upcoming-reservations">
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
@@ -262,5 +262,6 @@
             </main>
         </div>
         <script src="scripts/dashboard.js"></script>
+        <script type= "module" src="examples-testing-purposes/out-js/PageUpdater.js"></script>
     </body>
 </html> 
