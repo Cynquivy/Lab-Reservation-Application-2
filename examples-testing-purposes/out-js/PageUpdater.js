@@ -1,3 +1,4 @@
+import { formatOneWordTime, formatShortDateTime, getReservationCountInfo, getValidUser, setInnerHTML } from "./Helper.js";
 function init() {
     const accountJSON = sessionStorage.getItem("account");
     console.log("stared");
@@ -8,24 +9,20 @@ function init() {
     const currentFilePath = window.location.pathname;
     if (currentFilePath.endsWith("dashboard") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
         console.log("init dashboard");
-        initDashboard(account.accountType, account.reservations);
+        initDashboard(getValidUser(account.user), account.accountType, account.reservations);
     }
     else if (currentFilePath.endsWith("my-reservations")) {
-        initMyReservation(account.accountType, account.reservations);
+        initMyReservation(getValidUser(account.user), account.accountType, account.reservations);
     }
     else if (currentFilePath.endsWith("profile")) {
         initProfile(account);
     }
 }
-function initDashboard(accountType, reservations) {
-    initProfileHeader(accountType);
+function initDashboard(userName, accountType, reservations) {
+    initProfileHeader(userName, accountType);
     const { noOfReservations, noOfUpcoming } = getReservationCountInfo(reservations);
-    const noReservations = document.querySelector("#no-reservations");
-    if (noReservations)
-        noReservations.innerHTML = noOfReservations.toString();
-    const noUpcoming = document.querySelector("#no-upcoming");
-    if (noUpcoming)
-        noUpcoming.innerHTML = noOfUpcoming.toString();
+    setInnerHTML("#no-reservations", noOfReservations.toString());
+    setInnerHTML("#no-upcoming", noOfUpcoming.toString());
     const upcomingReservationTable = document.getElementById("upcoming-reservations");
     if (!upcomingReservationTable)
         return;
@@ -68,18 +65,12 @@ function createViewAllRow() {
     row.innerHTML = INNER_HTML;
     return row;
 }
-function initMyReservation(accountType, reservations) {
-    initProfileHeader(accountType);
+function initMyReservation(userName, accountType, reservations) {
+    initProfileHeader(userName, accountType);
     const reservationCounts = getReservationCountInfo(reservations);
-    const noUpcoming = document.querySelector("#stat-upcoming-badge");
-    if (noUpcoming)
-        noUpcoming.innerHTML = reservationCounts.noOfUpcoming.toString();
-    const noToday = document.querySelector("#stat-today-badge");
-    if (noToday)
-        noToday.innerHTML = reservationCounts.noOfToday.toString();
-    const noReservations = document.querySelector("#stat-total-badge");
-    if (noReservations)
-        noReservations.innerHTML = reservationCounts.noOfReservations.toString();
+    setInnerHTML("#stat-upcoming-badge", reservationCounts.noOfUpcoming.toString());
+    setInnerHTML("#stat-today-badge", reservationCounts.noOfToday.toString());
+    setInnerHTML("#stat-total-badge", reservationCounts.noOfReservations.toString());
     const reservationTBody = document.querySelector("#reservations-tbody");
     if (!reservationTBody)
         return;
@@ -131,79 +122,19 @@ function createReservationButtonsRow(accountID) {
     return buttonDataCell;
 }
 function initProfile(account) {
-    const userType = document.querySelector("#user-type");
-    if (userType)
-        userType.innerHTML = account.accountType;
+    let userName = getValidUser(account.user);
+    if (account.accountType === "Admin")
+        userName = "Admin";
+    setInnerHTML("#firstName", userName);
+    setInnerHTML("#user-type", account.accountType);
     const reservationCounts = getReservationCountInfo(account.reservations);
-    const reservationCount = document.querySelector("#reservations");
-    if (reservationCount)
-        reservationCount.innerHTML = reservationCounts.noOfReservations.toString();
-    const upcomingCount = document.querySelector("#upcoming");
-    if (upcomingCount)
-        upcomingCount.innerHTML = reservationCounts.noOfReservations.toString();
-    const email = document.querySelector("#email");
-    if (email)
-        email.innerHTML = account.email;
-    const id = document.querySelector("#studentID");
-    if (id)
-        id.innerHTML = account.id.toString();
+    setInnerHTML("#reservations", reservationCounts.noOfReservations.toString());
+    setInnerHTML("#upcoming", reservationCounts.noOfUpcoming.toString());
+    setInnerHTML("#email", account.email);
+    setInnerHTML("#studentID", account.id.toString());
 }
-function initProfileHeader(accountType) {
-    const userType = document.querySelector("#user-type");
-    if (userType)
-        userType.innerHTML = accountType;
-}
-export function formatDateTime(dateTime) {
-    const { year, month, day, time } = dateTime;
-    const { hour, minute } = time;
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-    const minuteStr = minute.toString().padStart(2, "0");
-    return `${month}/${day}/${year}, ${hour12}:${minuteStr}:00 ${ampm}`;
-}
-export function formatShortDateTime(dt) {
-    const dayDiff = computeDayDifferenceFromToday(dt);
-    let dayStr;
-    if (dayDiff === 0)
-        dayStr = "Today";
-    else if (dayDiff === 1)
-        dayStr = "Tomorrow";
-    else if (dayDiff === -1)
-        dayStr = "Yesterday";
-    else
-        dayStr = `${dt.month}/${dt.day}/${dt.year}`;
-    const hour = dt.time.hour;
-    const minute = dt.time.minute;
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-    const minuteStr = minute.toString().padStart(2, "0");
-    return `${dayStr} · ${hour12}:${minuteStr} ${ampm}`;
-}
-export function formatOneWordTime(dt) {
-    const dayDiff = computeDayDifferenceFromToday(dt);
-    let oneWord;
-    if (dayDiff === 0)
-        oneWord = "Today";
-    else if (dayDiff === 1)
-        oneWord = "Tomorrow";
-    else if (dayDiff === -1)
-        oneWord = "Yesterday";
-    else
-        oneWord = `${dt.month}/${dt.day}/${dt.year}`;
-    return oneWord;
-}
-export function computeDayDifferenceFromToday(dt) {
-    const now = new Date();
-    const dtDate = new Date(dt.year, dt.month - 1, dt.day, dt.time.hour, dt.time.minute);
-    const oneDayMs = 24 * 60 * 60 * 1000;
-    const dayDiff = Math.floor((dtDate.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0)) / oneDayMs);
-    return dayDiff;
-}
-export function getReservationCountInfo(reservations) {
-    return {
-        noOfReservations: reservations.length,
-        noOfToday: reservations.filter((reservation) => reservation.status === "Today").length,
-        noOfUpcoming: reservations.filter((reservation) => reservation.status === "Upcoming").length,
-    };
+function initProfileHeader(userName, accountType) {
+    setInnerHTML("#user-name", userName);
+    setInnerHTML("#user-type", accountType);
 }
 init();

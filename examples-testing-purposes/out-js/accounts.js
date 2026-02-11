@@ -1,9 +1,11 @@
 export const accounts = {
     ["user1@example.com"]: {
         id: 1,
+        user: "user1",
         email: "user1@example.com",
         password: "pass123",
         accountType: "Student",
+        course: "Accounting",
         reservations: [
             {
                 id: "R-MLHSJBZ4IY8I",
@@ -49,6 +51,7 @@ export const accounts = {
     },
     ["user2@example.com"]: {
         id: 2,
+        user: "John Doe",
         email: "user2@example.com",
         password: "mypassword",
         accountType: "Student",
@@ -77,6 +80,7 @@ export const accounts = {
     },
     ["user3@example.com"]: {
         id: 3,
+        user: "test",
         email: "user3@example.com",
         password: "securepass",
         accountType: "Student",
