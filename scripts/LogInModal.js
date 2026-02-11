@@ -107,6 +107,26 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
     }
 
     /**
+     * This fires when log in is clicked
+     *
+     * @param callback: () => void;
+     * @returns void
+     */
+    onLogIn(callback) {
+        this._logIn.addEventListener("click", callback);
+    }
+
+    /**
+     * This fires when log in is clicked
+     *
+     * @param callback: () => void;
+     * @returns void
+     */
+    onSignUp(callback) {
+        this._signUp.addEventListener("click", callback);
+    }
+
+    /**
      * Gets the text fields on sign up page
      * 
      * @returns {{ email: string, password: string, rememberMe: boolean}}
