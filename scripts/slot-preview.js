@@ -212,9 +212,8 @@ const BUILDING_DATA = {
     ]
 }
 
-function redirectToSeatReservation() {
-    // probably will change to http request later
-    window.location.replace('preview-seats.html');
+function redirectToSeatReservation(roomCode) {
+    window.location.replace(`preview-seats.html?room=${roomCode}`);
 }
 
 function populateTable(roomCode, floor) {
@@ -228,7 +227,9 @@ function populateTable(roomCode, floor) {
         room_row.textContent = room;
 
         for (var i = 1; i < 11; i++) {
-            row.insertCell(i);
+            let cell = row.insertCell(i);
+            cell.textContent = room;
+            cell.style.color = "transparent";
         }
     }
 
@@ -236,7 +237,8 @@ function populateTable(roomCode, floor) {
 
     for (var i = 0; i < cells.length; i++) {
         if (cells[i].className != 'room-data') {
-            cells[i].addEventListener('click', redirectToSeatReservation);
+            cells[i].addEventListener('click', () => {
+                redirectToSeatReservation(cells[i].textContent)});
         }
     }
 }
