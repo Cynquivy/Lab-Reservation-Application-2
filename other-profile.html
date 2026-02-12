@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles/variables.css">
+        <link rel="stylesheet" href="styles/profile.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <title>My Profile</title>
+    </head>
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard.html"><img src="images/logo2.png"></a>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard.html">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="profile.html" class="active">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <h3>Profile</h3>
+                    </a>
+                    <a href="profile-settings.html">
+                        <span class="material-symbols-outlined">settings</span>
+                        <h3>Profile Settings</h3>
+                    </a>
+                </div>
+            </aside>
+
+            <main data-profileid = "12345678">
+                <div class="header"> 
+                    <h1>My Profile</h1>
+                </div>
+
+                <div class="block1">
+                    <div class="profile-card">
+                        <div class="profile-card-container">
+                            <div class="profile-photo">
+                                <img id="profileImage" src="images/profilepic.webp">  
+                                <input type="file" id="photoInput" accept="image/*" hidden>
+                            </div>
+                            <button id="changePhotoBtn"><h3>Change Photo</h3></button>
+                            <h2><span id="firstName">User Name</span> <span id="lastName"></span></h2>
+                            <h3 id="user-type">Student</h3>
+
+                            <div class="profile-stats">
+                                <div id="reservationsBtn" class="showReservations">
+                                    <h3>Reservations</h3>
+                                    <p id="reservations">2</p>
+                                </div>
+                                <div id="upcomingBtn" class="showReservations">
+                                    <h3>Upcoming Today</h3>
+                                    <p id = "upcoming">1</p>
+                                </div>
+                            </div>
+
+                            <div class="profile-info">
+                                <div class="info-row">
+                                    <span class="label">Email</span>
+                                    <span class="value" id="email">user@email.com</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Student ID</span>
+                                    <span class="value" id="studentID">12345678</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Course</span>
+                                    <span class="value" id="course">Computer Science</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Contact</span>
+                                    <span class="value" id="contactNumber">+67 676 767 6767</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button id="editBtn" class="primary-btn" type="button">
+                                    Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reservation-list" id="reservationList">
+                        <h2 id="listTitle"></h2>
+
+                        <table class="upcoming-reservations">
+                            <thead>
+                                <tr>
+                                    <th>Laboratory</th>
+                                    <th>Date & Time Requested</th>
+                                    <th>Date & Time</th>
+                                    <th>Seat</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="upcomingTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <h2>Account Information</h2>
+
+                        <form class="profile-form">
+                            <div class="form">
+                                <div class="form-name">
+                                    <div>
+                                        <label>
+                                            First Name
+                                        </label>
+
+                                        <input type="text" placeholder="First Name">
+                                    </div>
+                                    <div>
+                                        <label>
+                                            Last Name
+                                        </label>
+
+                                        <input type="text" placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Email
+                                </label>
+
+                                <input type="email" placeholder="Enter your email">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Student ID
+                                </label>
+
+                                <input type="text" placeholder="Enter your student ID">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Course
+                                </label>
+
+                                <input type="text" placeholder="Enter your course">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Contact Number
+                                </label>
+
+                                <input type="tel" placeholder="Enter your contact number">
+                            </div>
+
+                            <div class="form-actions">
+                                <button id="saveBtn" class="primary-btn" type="submit">
+                                    Save
+                                </button>
+
+                                <button id="cancelBtn" class="primary-btn" type="button">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="scripts/other-profile.js"></script>
+        <script type= "module" src="examples-testing-purposes/out-js/PageUpdater.js"></script>
+    </body>
+</html>

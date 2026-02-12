@@ -318,7 +318,7 @@ const GK301_TEXT = `
             <div class="seat">
                 <svg viewBox="0 0 100 100">
                     <circle r="45" cx="50" cy="50" fill="#8FC991" />
-                    <text class="number" x="50" y="55">15</text>>
+                    <text class="number" x="50" y="55">15</text>
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
@@ -428,7 +428,7 @@ const GK301_TEXT = `
         <div class="seat-group">
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill=    "red" />
+                    <circle r="45" cx="50" cy="50" fill= "#F06F65" />
                     <text class="number" x="50" y="55">22</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -561,7 +561,7 @@ const GK301_TEXT = `
         <div class="seat-group">
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill=    "red" />
+                    <circle r="45" cx="50" cy="50" fill=    "#F06F65" />
                     <text class="number" x="50" y="55">31</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -1006,7 +1006,7 @@ const GK302A_TEXT =  `
                 </div>
             </div>
         </div>
-    </svg>
+    </div>
 </div>
 `;
 
@@ -1056,7 +1056,7 @@ const GK306A_TEXT = `
             </svg>  
             <div class="seat-dropdown">
                 <p>Status: Not Available</p>
-                <p>By: <span class="user">Anonymous</span></p>
+                <p>By: <a href="other-profile.html?id=2" class="user">John Doe</a></span></p>
             </div>
         </div>
         <div class="seat col">
