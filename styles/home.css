@@ -226,7 +226,7 @@ body {
     font-size: 38px;
     color: #E0E7FF;
     margin-bottom: 70px;
-    text-align: left;
+    text-align: center;
 }
 
 .feature-body {
@@ -235,8 +235,8 @@ body {
 }
 
 .features-container {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    display: flex;
+    justify-content: center;
     align-items: center;
     gap: 60px;
 }
@@ -287,11 +287,13 @@ body {
 }
 
 .feature-content{
-    margin-top: -15px;
+    margin-top: -25px;
+    width: 25ch;
 }
 
 .feature-content h3 {
     font-size: 22px;
+    margin-top: 5px;
     margin-bottom: 8px;
     color: #A3D4FA;
 }
