@@ -136,7 +136,7 @@ const GK301_TEXT = `
             </div>
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">3</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -474,7 +474,7 @@ const GK301_TEXT = `
         <div class="seat-group">
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill=    "red" />
+                    <circle r="45" cx="50" cy="50" fill= "#F06F65" />
                     <text class="number" x="50" y="55">31</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -511,7 +511,7 @@ const GK302A_TEXT =  `
         <div class="seat-group-col" style="margin-left:17.5rem;">
             <div class="seat col">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">1</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -520,7 +520,7 @@ const GK302A_TEXT =  `
             </div>
             <div class="seat col">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">2</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -560,7 +560,7 @@ const GK302A_TEXT =  `
         <div class="seat-group-col">
             <div class="seat col">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">5</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -569,7 +569,7 @@ const GK302A_TEXT =  `
             </div>
             <div class="seat col">
                 <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">6</text>
                 </svg>
                 <div class="seat-dropdown">
@@ -1250,21 +1250,8 @@ function initialize(roomCode) {
     displayAvailableSeats(roomCode);
 }   
 
-display_seat.addEventListener("click", (e) => {
-    const seat = e.target.closest(".seat");
-
-    const dropdown = seat.querySelector(".seat-dropdown");
-
-    document.querySelectorAll(".seat-dropdown").forEach(d => {
-        if (d !== dropdown) 
+document.querySelectorAll(".seat-dropdown").forEach(d => {
             d.style.display = "none";
-    });
-
-    if (dropdown.style.display === "block"){
-        dropdown.style.display = "none";
-    } else{
-        dropdown.style.display = "block"
-    }
 });
 
 const params = new URLSearchParams(window.location.search);
