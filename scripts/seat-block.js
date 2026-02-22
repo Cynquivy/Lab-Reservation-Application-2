@@ -141,14 +141,15 @@ const GK301_TEXT = `
                 </div>
             </div>
             <div class="seat">
-                <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <circle r="45" cx="50" cy="50" fill="#F06F65" />
                     <text class="number" x="50" y="55">3</text>
                 </svg>
                 <div class="seat-dropdown">
-                    <p>Status: Available</p>
-                    <button type="button" class="reserve">
-                        Reserve
+                    <p>Status: Not Available</p>
+                    <p>By: <a href="other-profile.html?id=2" class="user">John Doe</a></span></p>
+                    <button type="button">
+                        Delete
                     </button>
                 </div>
             </div>
@@ -318,7 +319,7 @@ const GK301_TEXT = `
             <div class="seat">
                 <svg viewBox="0 0 100 100">
                     <circle r="45" cx="50" cy="50" fill="#8FC991" />
-                    <text class="number" x="50" y="55">15</text>>
+                    <text class="number" x="50" y="55">15</text>
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
@@ -428,12 +429,15 @@ const GK301_TEXT = `
         <div class="seat-group">
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill=    "red" />
+                    <circle r="45" cx="50" cy="50" fill= "#F06F65" />
                     <text class="number" x="50" y="55">22</text>
                 </svg>
                 <div class="seat-dropdown">
-                    <p>Status: Reserved</p>
+                    <p>Status: Not Available</p>
                     <p>By: <span class="user">Anonymous</span></p>
+                    <button type="button">
+                        Delete
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -561,12 +565,15 @@ const GK301_TEXT = `
         <div class="seat-group">
             <div class="seat">
                 <svg viewBox="0 0 100 100">
-                    <circle r="45" cx="50" cy="50" fill=    "red" />
+                    <circle r="45" cx="50" cy="50" fill=    "#F06F65" />
                     <text class="number" x="50" y="55">31</text>
                 </svg>
                 <div class="seat-dropdown">
-                    <p>Status: Reserved</p>
+                    <p>Status: Not Available</p>
                     <p>By: <span class="user">Anonymous</span></p>
+                    <button type="button">
+                        Delete
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -604,25 +611,27 @@ const GK302A_TEXT =  `
     <div class="seat-group-col" style="margin-left:17.5rem;">
         <div class="seat col">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 <text class="number" x="50" y="55">1</text>
             </svg>
             <div class="seat-dropdown">
-                <p>Status: Available</p>
-                <button type="button" class="reserve">
-                    Reserve
+                <p>Status: Not Available</p>
+                <p>By: <a class="user">Anonymous</a></span></p>
+                <button type="button">
+                    Delete
                 </button>
             </div>
         </div>
         <div class="seat col">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 <text class="number" x="50" y="55">2</text>
             </svg>
             <div class="seat-dropdown">
-                <p>Status: Available</p>
-                <button type="button" class="reserve">
-                    Reserve
+                <p>Status: Not Available</p>
+                <p>By: <a class="user">Anonymous</a></span></p>
+                <button type="button">
+                    Delete
                 </button>
             </div>
         </div>
@@ -665,25 +674,27 @@ const GK302A_TEXT =  `
     <div class="seat-group-col">
         <div class="seat col">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 <text class="number" x="50" y="55">5</text>
             </svg>
             <div class="seat-dropdown">
-                <p>Status: Available</p>
-                <button type="button" class="reserve">
-                    Reserve
+                <p>Status: Not Available</p>
+                <p>By: <a href="other-profile.html?id=1" class="user">Jake</a></span></p>
+                <button type="button">
+                    Delete
                 </button>
             </div>
         </div>
         <div class="seat col">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-                <circle r="45" cx="50" cy="50" fill="#8FC991" />
+                <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 <text class="number" x="50" y="55">6</text>
             </svg>
             <div class="seat-dropdown">
-                <p>Status: Available</p>
-                <button type="button" class="reserve">
-                    Reserve
+                <p>Status: Not Available</p>
+                <p>By: <a href="other-profile.html?id=3" class="user">Kane</a></span></p>
+                <button type="button">
+                    Delete
                 </button>
             </div>
         </div>
@@ -1006,7 +1017,7 @@ const GK302A_TEXT =  `
                 </div>
             </div>
         </div>
-    </svg>
+    </div>
 </div>
 `;
 
@@ -1056,7 +1067,10 @@ const GK306A_TEXT = `
             </svg>  
             <div class="seat-dropdown">
                 <p>Status: Not Available</p>
-                <p>By: <span class="user">Anonymous</span></p>
+                <p>By: <a href="other-profile.html?id=2" class="user">John Doe</a></span></p>
+                <button type="button">
+                    Delete
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1523,7 +1537,7 @@ const reservation_counter = document.getElementById('reservation-counter');
 let block_count = 0;
 reservation_counter.textContent = reservation_count;
 
-document.querySelectorAll('button').forEach(button => {
+document.querySelectorAll('button .reserve').forEach(button => {
   button.addEventListener('click', function() {
     this.disabled = true;
 
