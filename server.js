@@ -6,34 +6,39 @@ const User = require('./models/user.model');
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
+const path = require("path");
+app.use(express.static(path.join(__dirname)));
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
 
 app.post("/signup", async (request, response) => {
     const {email, password, role} = request.body;
-    if (!email.includes("@") && !email.endsWith(".com")) {
+    if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
         return;
     }
 
     try {
-        const defaultUsername = email.split("@")[0];
+        const defaultUsername= email.split("@")[0];
+        const defaultFirstName = defaultUsername.split("_")[0];
+        const defaultLastName = defaultUsername.split("_")[1];
         const newUser = new User({
-            firstName: defaultUsername,
-            lastName: "",
+            firstName: defaultFirstName,
+            lastName: defaultLastName,
             email,
             role,
             password,
         })
 
         await newUser.save();
-        response.status(201).json({ message: "User created!", user: newUser._id});
+        return response.status(201).json({ message: "User created!", user: newUser._id});
     } catch (error) {
         if (error.code === 11000) //11000 is code for attempting to add an existing document field with a unique key
-            response.status(400).json({message: "Account with email already exists!"})
+           return response.status(400).json({message: "Account with email already exists!"})
 
-        response.status(400).json({ message: error.message});
+        return response.status(400).json({ message: error.message});
     }
 })
 
@@ -43,23 +48,24 @@ app.post("/login", async (request, response) => {
     try {
         const user = await User.findOne({email})
         if (!user) {
-            response.status(400).json({message: "User with email doesn't exist!"})
-            return;
+            return response.status(400).json({message: "User with email doesn't exist!"})
         }
 
         if (user.password !== password) {
-            response.status(400).json({message: "Ivalid Password!"})
-            return;
+            return response.status(400).json({message: "Invalid Password!"})
         }
 
         response.status(201).json({ message: "User found!", user: user._id});
     } catch (error) {
         if (error.code === 11000) //11000 is code for attempting to add an existing document field with a unique key
-            response.status(400).json({message: "Account with email already exists!"})
+            return response.status(400).json({message: "Account with email already exists!"})
 
-        response.status(400).json({ message: error.message });
+        return response.status(400).json({ message: error.message });
     }
 })
+
+
+// 
 
 mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
 .then(() =>{

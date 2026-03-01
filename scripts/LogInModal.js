@@ -1,4 +1,4 @@
-const { response } = require("express");
+const BASE_URL = "http://localhost:3000";
 
 const DIV = `
         <div class="overlay">
@@ -163,8 +163,8 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
             console.warn(`LogInModal Warning: You might have forgot to put an error message`);
         }
         const message = ERROR_ICON + errorMessage;
-        this._errorSingUp.innerHTML = message;
-        this._errorSingUp.classList.remove(`is-hidden`);
+        this._errorSignUp.innerHTML = message;
+        this._errorSignUp.classList.remove(`is-hidden`);
     }
 
     /**
@@ -185,7 +185,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
     * Hides both error messages
     */
     hideErrorMessages() {
-        this._errorSingUp.classList.add(`is-hidden`);
+        this._errorSignUp.classList.add(`is-hidden`);
         this._errorLogIn.classList.add(`is-hidden`);
     }
 
@@ -216,7 +216,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
         this._logInCard = this._modal.querySelector("#log-in-card");
         this._signInContent = this._modal.querySelector("#sign-in-content");
         this._hiddableH4 = this._modal.querySelector("#hiddable");
-        this._errorSingUp = this._modal.querySelector("#error-sign-up");
+        this._errorSignUp = this._modal.querySelector("#error-sign-up");
         this._errorLogIn = this._modal.querySelector("#error-log-in");
         this._signUp = this._modal.querySelector("#sign-up");
         this._logIn = this._modal.querySelector("#log-in");
@@ -287,7 +287,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
     async _signUpUser(email, password) {
         try {
-            const response = await fetch("/signup", {
+            const response = await fetch(`${BASE_URL}/signup`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ email: email, password: password }),
@@ -308,7 +308,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
     async _logInUser(email, password) {
         try {
-            const response = await fetch("/login", {
+            const response = await fetch(`${BASE_URL}/login`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ email: email, password: password , role: "student"}),
@@ -316,14 +316,14 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
             const data = await response.json();
             if (!response.ok) {
-                this.displayErrorSignUp(data.message || "Log up failed");
+                this.displayErrorLogIn(data.message || "Log up failed");
                 return;
             }
 
             sessionStorage.setItem("user", data.user);
             window.location.href = "./dashboard.html";
         } catch {
-            this.displayErrorSignUp("Network error");
+            this.displayErrorLogIn("Network error");
         }
     }
 
@@ -358,18 +358,20 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 }
 
 //this is ideally exported elsewhere, but i cant do export/imports without a server i think?
-document.getElementById("sign-in").addEventListener("click", () => {
-    new LogInModal("LOG_IN");
-})
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("sign-in").addEventListener("click", () => {
+        new LogInModal("LOG_IN");
+    })
 
-document.getElementById("register").addEventListener("click", () => {
-    new LogInModal("SIGN_IN");
-})
+    document.getElementById("register").addEventListener("click", () => {
+        new LogInModal("SIGN_IN");
+    })
 
-document.getElementById("sign-in2").addEventListener("click", () => {
-    new LogInModal("LOG_IN");
-})
+    document.getElementById("sign-in2").addEventListener("click", () => {
+        new LogInModal("LOG_IN");
+    })
 
-document.getElementById("register2").addEventListener("click", () => {
-    new LogInModal("SIGN_IN");
-})
+    document.getElementById("register2").addEventListener("click", () => {
+        new LogInModal("SIGN_IN");
+    })
+});
