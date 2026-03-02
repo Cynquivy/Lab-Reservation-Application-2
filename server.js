@@ -2,13 +2,15 @@ var express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+
 const User = require('./models/user.model');
 const Reservation = require('./models/reservation.model');
 const Activity = require('./models/activity.model');
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
-const path = require("path");
 app.use(express.static(path.join(__dirname)));
 
 app.use(express.json());
@@ -121,6 +123,36 @@ app.post("/activities/test", async (req, res) => {
     }
 });
 
+// PROFILE HANDLING
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      updateData.profileImage = req.file.filename; 
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+    
 mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
 .then(() =>{
     console.log("Connected to database!");

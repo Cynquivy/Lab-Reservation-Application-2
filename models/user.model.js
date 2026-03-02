@@ -38,6 +38,21 @@ const UserSchema = mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true
+        },
+
+        studentID: {
+            type: String,
+            default: ""
+        },
+
+        course: {
+            type: String,
+            default: ""
+        },
+
+        contactNumber: {
+            type: String,
+            default: ""
         }
     },
     {

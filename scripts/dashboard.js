@@ -7,6 +7,26 @@ const dd = String(today.getDate()).padStart(2, '0');
 
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 
+const userID = sessionStorage.getItem("user");
+
+const profileImage = document.querySelector('#user-pic');
+
+async function loadUserImg(){
+    try{
+        const res = await fetch(`http://localhost:3000/users/${userID}`);
+
+        if(!res.ok){
+            throw new Error("Failed to load profile");
+        }
+
+        const user = await res.json();
+
+        profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+
+    } catch(error){
+        console.error("Error loading profile: ", error);
+    }
+}
 /*
 const loggedInUserJSON = sessionStorage.getItem("loggedInUser");
 let loggedInUser = null;
@@ -31,7 +51,6 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
 }*/
 
 document.addEventListener("DOMContentLoaded", async() => {
-    const userID = sessionStorage.getItem("user");
 
     if(!userID){
         window.location.href = "index.html";
@@ -174,3 +193,5 @@ function formatTimePassed(date) {
         return `${days} day${days !== 1 ? "s" : ""} ago`;
     }
 }
+
+loadUserImg();
