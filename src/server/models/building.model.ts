@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
+import { Building } from "../../shared/modelTypes";
 
-export type Building = {
-    name: string,
-    floors: number,
-}
+type BuildingDB =  Building<mongoose.Types.ObjectId>
 
-const BuildingSchema = new mongoose.Schema<Building>(
+const BuildingSchema = new mongoose.Schema<BuildingDB>(
     {
         name: {
             type: String,

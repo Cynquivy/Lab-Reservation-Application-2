@@ -1,24 +1,9 @@
 import mongoose from "mongoose";
+import { Lab } from "../../shared/modelTypes";
 
-export type Lab = {
-    name: string,
-    building: mongoose.Schema.Types.ObjectId,
-    floor: number,
-    totalSeats: number,
-    location?: string,
-    layout: {
-        type: "seat" | "table";
-        xCoord: number;
-        yCoord: number;
-        width?: number;
-        height?: number;
-        status?: "available" | "reserved" | "unavailable";
-        reservedBy?: mongoose.Types.ObjectId | null;
-    }[],
-    isActive?: boolean;
-}
+export type LabDB = Lab<mongoose.Types.ObjectId, Date> 
 
-const LabSchema = new mongoose.Schema<Lab>(
+const LabSchema = new mongoose.Schema<LabDB>(
     {
         name: {
             type: String,
