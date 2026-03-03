@@ -1,21 +1,23 @@
+import { LabName } from "./labNames";
+
 export type Activity<TID = string, TDate = string> = {
     user: TID;
     reservation: TID;
     action: "reserved" | "cancelled";
     seatNumber: number;
     labName: string;
-    timestamp: TDate;
+    timestamp?: TDate;
 }
-export type ActivityDTO = Activity;
+export type ActivityDTO = Activity & {_id: string};
 
 export type Building<TID = string, TDate = string> = {
     name: string,
     floors: number,
 }
-export type BuildingDTO = Building;
+export type BuildingDTO = Building & {_id: string};
 
 export type Lab<TID = string, TDate = string> = {
-    name: string,
+    name: LabName,
     building: TID,
     floor: number,
     totalSeats: number,
@@ -31,7 +33,7 @@ export type Lab<TID = string, TDate = string> = {
     }[],
     isActive?: boolean;
 }
-export type LabDTO = Lab;
+export type LabDTO = Lab & {_id: string};
 
 export type Reservation<TID = string, TDate = string> = {
     user: TID;
@@ -43,7 +45,7 @@ export type Reservation<TID = string, TDate = string> = {
     endTime: TDate;
     status?: "upcoming" | "today" | "past" | "cancelled";  
 }
-export type ReservationDTO = Reservation;
+export type ReservationDTO = Omit<Reservation, "lab"> & {_id: string, lab: {_id: string, name: LabName}};
 
 export type User<TID = string, TDate = string> = {
     firstName: string;
@@ -57,4 +59,4 @@ export type User<TID = string, TDate = string> = {
     course?: string;
     contactNumber?: string;
 }
-export type UserDTO = User;
+export type UserDTO = User & {_id: string};

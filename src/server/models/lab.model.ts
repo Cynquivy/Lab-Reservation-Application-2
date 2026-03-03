@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Lab } from "../../shared/modelTypes";
+import { LAB_NAMES } from "../../shared/labNames";
 
 export type LabDB = Lab<mongoose.Types.ObjectId, Date> 
 
@@ -7,6 +8,7 @@ const LabSchema = new mongoose.Schema<LabDB>(
     {
         name: {
             type: String,
+            enum: LAB_NAMES,
             required: true,
             unique: true,
         },
