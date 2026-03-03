@@ -1,15 +1,9 @@
 import mongoose from 'mongoose';
+import { Activity } from '../../shared/modelTypes';
 
-export type Activity = {
-    user: mongoose.Types.ObjectId;
-    reservation: mongoose.Types.ObjectId;
-    action: "reserved" | "cancelled";
-    seatNumber: number;
-    labName: string;
-    timestamp: Date;
-}
+type ActivityDB = Activity<mongoose.Types.ObjectId, Date>;
 
-const activitySchema = new mongoose.Schema<Activity>({
+const activitySchema = new mongoose.Schema<ActivityDB>({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

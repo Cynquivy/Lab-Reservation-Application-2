@@ -1,17 +1,9 @@
 import mongoose from "mongoose";
+import { Reservation } from "../../shared/modelTypes";
 
-export type Reservation = {
-    user: mongoose.Types.ObjectId;
-    lab: mongoose.Types.ObjectId;
-    seatNumber: number;
-    date: Date;
-    dateRequested: Date;
-    startTime: Date;
-    endTime: Date;
-    status?: "upcoming" | "today" | "past" | "cancelled";  
-}
+type ReservationDB = Reservation<mongoose.Types.ObjectId, Date>
 
-const ReservationSchema = new mongoose.Schema<Reservation>(
+const ReservationSchema = new mongoose.Schema<ReservationDB>(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,

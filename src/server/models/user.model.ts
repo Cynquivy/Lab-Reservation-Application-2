@@ -1,19 +1,9 @@
 import mongoose from "mongoose";
+import { User } from "../../shared/modelTypes";
 
-export type User = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    role?: "Student" | "Admin";
-    profileImage?: string;
-    isActive?: boolean;
-    studentID?: string;
-    course?: string;
-    contactNumber?: string;
-}
+type UserDB = User<mongoose.Types.ObjectId, Date>
 
-const UserSchema = new mongoose.Schema<User>(
+const UserSchema = new mongoose.Schema<UserDB>(
     {
         firstName: {
             type: String,

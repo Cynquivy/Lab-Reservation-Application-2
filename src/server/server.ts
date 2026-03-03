@@ -5,7 +5,8 @@ import multer from 'multer';
 import path from 'path';
 
 import User from './models/user.model';
-import Reservation , { type Reservation as ReservationType } from './models/reservation.model';
+import Reservation from './models/reservation.model';
+import { ReservationDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
@@ -74,7 +75,7 @@ app.post("/login", async (request, response) => {
 
 app.post(`/reservations`, async (request, response) => {
     try {
-        const info = request.body as ReservationType;
+        const info = request.body as ReservationDTO;
         const newReservation = new Reservation(info);
 
         await newReservation.save();
@@ -191,6 +192,30 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Failed to update user' });
   }
+});
+
+
+// DASHBOARD-ADMIN
+app.get("/reservations", async (req, res) =>{
+    try{
+        const reservations = await Reservation.find()
+            .populate("lab", "name")
+            .populate("user", "firstName, lastName")
+            .sort({date: 1})
+        res.json(reservations);
+    } catch(error){
+        res.status(400).json({message: (error as any).message});
+    }
+});
+
+app.get("/activities", async(req, res) =>{
+    try {
+        const activities = await Activity.find()
+            .populate("user", "firstName lastName")
+        res.json(activities);
+    } catch (error) {
+        res.status(400).json({ message: (error as any).message });
+    }
 });
     
 mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
