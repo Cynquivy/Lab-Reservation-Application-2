@@ -5,7 +5,8 @@ import multer from 'multer';
 import path from 'path';
 
 import User from './models/user.model';
-import Reservation , { type Reservation as ReservationType } from './models/reservation.model';
+import Reservation from './models/reservation.model';
+import { ReservationDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
@@ -74,7 +75,7 @@ app.post("/login", async (request, response) => {
 
 app.post(`/reservations`, async (request, response) => {
     try {
-        const info = request.body as ReservationType;
+        const info = request.body as ReservationDTO;
         const newReservation = new Reservation(info);
 
         await newReservation.save();

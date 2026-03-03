@@ -1,5 +1,5 @@
-import { UserDTO } from "../../server/models/clientTypes";
-import { ReservationDTO } from "../../server/models/clientTypes";
+import { UserDTO } from "../../shared/modelTypes";
+import { ReservationDTO } from "../../shared/modelTypes";
 
 export type UserID = string & {_brand: "UserID"}
 export type ReservationID = string & {_brand: "ReservationID"}
