@@ -1,17 +1,17 @@
-var express = require('express');
-const mongoose = require('mongoose');
-const app = express();
-const cors = require("cors");
-const multer = require("multer");
-const path = require("path");
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
 
-const User = require('./models/user.model');
-const Reservation = require('./models/reservation.model');
-const Activity = require('./models/activity.model');
+import User from './models/user.model';
+import Reservation , { type Reservation as ReservationType } from './models/reservation.model';
+import Activity from './models/activity.model';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
-app.use(express.static(path.join(__dirname)));
+const app = express();
+app.use(express.static(path.join(process.cwd())));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -35,10 +35,10 @@ app.post("/signup", async (request, response) => {
             role,
             password,
         })
-
         await newUser.save();
         return response.status(201).json({ message: "User created!", user: newUser._id});
-    } catch (error) {
+    } catch (errorRecieved) {
+        const error = errorRecieved as any;
         if (error.code === 11000) //11000 is code for attempting to add an existing document field with a unique key
            return response.status(400).json({message: "Account with email already exists!"})
 
@@ -59,8 +59,10 @@ app.post("/login", async (request, response) => {
             return response.status(400).json({message: "Invalid Password!"})
         }
 
-        response.status(201).json({ message: "User found!", user: user._id});
-    } catch (error) {
+        return response.status(201).json({ message: "User found!", user: user._id});
+    } catch (errorRecieved) {
+        const error = errorRecieved as any;
+
         if (error.code === 11000) //11000 is code for attempting to add an existing document field with a unique key
             return response.status(400).json({message: "Account with email already exists!"})
 
@@ -68,6 +70,28 @@ app.post("/login", async (request, response) => {
     }
 })
 
+//RESERVATIONS
+
+app.post(`/reservations`, async (request, response) => {
+    try {
+        const info = request.body as ReservationType;
+        const newReservation = new Reservation(info);
+
+        await newReservation.save();
+        return response.status(201).json({message: `Reservation create`, id: newReservation.id})
+    } catch (error) {
+        return response.status(400).json({message: (error as any).message})
+    }
+})
+
+app.delete("/reservations/:id", async (request, response) => {
+    try {
+        await Reservation.findByIdAndDelete(request.params.id);
+        response.status(201).json({ message: "Reservation cancelled" });
+    } catch (error) {
+        response.status(400).json({ message: (error as any).message });
+    }
+});
 
 // FOR DASHBOARD
 app.get("/users/:id", async (req, res) => {
@@ -78,9 +102,25 @@ app.get("/users/:id", async (req, res) => {
             return res.status(400).json({message: "User not found"});
         }
 
-        res.json(user);
+        return res.json(user);
     } catch(error){
-        res.status(400).jsoon({message: error.message});
+        return res.status(400).json({message: (error as any).message});
+    }
+});
+
+app.put("/reservations/:id", async (request, response) => {
+    try {
+        const updated = await Reservation.findByIdAndUpdate(
+            request.params.id,
+            request.body,
+            { new: true }
+        );
+        if (!updated) 
+            return response.status(404).json({ message: "Reservation not found" });
+
+        return response.json(updated);
+    } catch (error) {
+        return response.status(500).json({ message: (error as any).message });
     }
 });
 
@@ -91,7 +131,7 @@ app.get("/reservations/user/:id", async(req, res) => {
             .sort({date: 1});
         res.json(reservations);
     } catch(error){
-        res.status(400).json({message: error.message});
+        res.status(400).json({message: (error as any).message});
     }
 });
 
@@ -102,7 +142,7 @@ app.get("/activities/user/:id", async (req, res) =>{
 
         res.json(activities);
     } catch(error){
-        res.status(500).json({message: error.message});
+        res.status(500).json({message: (error as any).message});
     }
 });
 
@@ -119,16 +159,16 @@ app.post("/activities/test", async (req, res) => {
 
         res.status(201).json(activity);
     } catch(error){
-        res.status(500).json({message: error.message});
+        res.status(500).json({message: (error as any).message});
     }
 });
 
 // PROFILE HANDLING
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (_, __, cb) {
     cb(null, 'images/');
   },
-  filename: function (req, file, cb) {
+  filename: function (_, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
@@ -165,7 +205,7 @@ mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mon
 });
 
 
-function capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string: string) {
   if (!string || string.length === 0) { 
     return "";
   }
