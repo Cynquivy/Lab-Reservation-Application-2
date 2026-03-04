@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Lab } from "../../shared/modelTypes";
+import { LAB_NAMES } from "../../shared/labNames";
 
 export type LabDB = Lab<mongoose.Types.ObjectId> 
 

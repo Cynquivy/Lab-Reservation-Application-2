@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src/server",
+    "rootDir": "./src",
     "outDir": "./out/server",
     "module": "CommonJS",
     "moduleResolution": "node",

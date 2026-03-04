@@ -9,6 +9,7 @@ import Reservation from './models/reservation.model';
 import Lab from './models/lab.model';
 import { ReservationDTO } from '../shared/modelTypes';
 import { LabDTO } from '../shared/modelTypes';
+import { ActivityDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
@@ -81,6 +82,34 @@ app.post("/login", async (request, response) => {
     }
 })
 
+//ACTIVITY
+app.post(`/activity`, async (request, response) => {
+    try {
+        const info = request.body as Omit<ActivityDTO, "_id">;
+        const newActivity = new Activity(info);
+
+        await newActivity.save();
+        return response.status(201).json({message: `Activity created`, id: newActivity.id})
+    } catch (error) {
+        return response.status(400).json({message: (error as any).message})
+    }
+});
+
+//LAB
+app.get(`/lab/name/:name`, async (request, response) => {
+    try {
+        const lab = await Lab.findOne({name: request.params.name});
+
+        if(!lab){
+            return response.status(400).json({message: "User not found"});
+        }
+
+        return response.json(lab);
+    } catch (error) {
+        return response.status(400).json({message: (error as any).message});
+    }
+})
+
 //RESERVATIONS
 
 app.post(`/reservations`, async (request, response) => {
@@ -101,6 +130,18 @@ app.delete("/reservations/:id", async (request, response) => {
         response.status(201).json({ message: "Reservation cancelled" });
     } catch (error) {
         response.status(400).json({ message: (error as any).message });
+    }
+});
+
+app.get("/reservations/id/:id", async (req, res) =>{
+    try{
+        const reservation = await Reservation.findById(req.params.id)
+        if (!reservation)
+            return res.status(404).json({ message: "Reservation not found" });
+        
+        return res.json(reservation);
+    } catch(error){
+        return res.status(500).json({message: (error as any).message});
     }
 });
 
@@ -205,7 +246,7 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
 });
     
 // DASHBOARD-ADMIN
-app.get("/reservations", async (_req, res) =>{
+app.get("/reservations", async (_, res) =>{
     try{
         const reservations = await Reservation.find()
             .populate("lab", "name")
@@ -360,9 +401,14 @@ app.post('/seat-reservation', async (req: any, res: any) => {
         let labID: string = newLab.id;
         let today = new Date().toISOString();
 
-        const reservation_info: ReservationDTO = {
+        type NewReservationDTO = Omit<ReservationDTO, "_id">;
+
+        const reservation_info: NewReservationDTO = {
             user: userID, 
-            lab: labID,
+            lab: {
+                _id: labID,
+                name: room
+            },
             seatNumber: Number(seatNumber),
             totalSeats: Number(totalSeats),
             date: date,
