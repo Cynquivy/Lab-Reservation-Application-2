@@ -1,16 +1,10 @@
 import mongoose from "mongoose";
 import { Lab } from "../../shared/modelTypes";
 
-export type LabDB = Lab<mongoose.Types.ObjectId, Date> 
+export type LabDB = Lab<mongoose.Types.ObjectId> 
 
 const LabSchema = new mongoose.Schema<LabDB>(
     {
-        name: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-
         building: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Building",
@@ -22,54 +16,9 @@ const LabSchema = new mongoose.Schema<LabDB>(
             required: true
         },
 
-        totalSeats: {
-            type: Number,
+        room: {
+            type: String,
             required: true
-        },
-
-        location: {
-            type: String
-        },
-
-        layout: [
-            {
-                type: {
-                    type: String,
-                    enum: ["seat", "table"],
-                    required: true
-                },
-
-                xCoord: {
-                    type: Number,
-                    required: true
-                },
-
-                yCoord: {
-                    type: Number,
-                    required: true,  
-                },
-
-                width: Number,
-
-                height: Number,
-
-                status: {
-                    type: String,
-                    enum: ["available", "reserved", "unavailable"],
-                    default: "available"
-                },
-
-                reservedBy: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "User",
-                    default: null
-                }
-            }
-        ],
-        
-        isActive: {
-            type: Boolean,
-            default: true
         }
     },
     {

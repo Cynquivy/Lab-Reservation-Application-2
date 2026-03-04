@@ -102,10 +102,10 @@ const BUILDING_DATA = {
         'SJ LAB311_313'
     ],
     SJ_4: [
-        'SJ LAB4 03',
-        'SJ LAB4 04',
-        'SJ LAB4 05',
-        'SJ LAB4 08',
+        'SJ LAB403',
+        'SJ LAB404',
+        'SJ LAB405',
+        'SJ LAB408',
         'SJ LAB402',
         'SJ LAB407',
         'SJ LAB409',
@@ -212,13 +212,11 @@ const BUILDING_DATA = {
         'V513'
     ]
 }
-function redirectToSeatReservation(roomCode) {
-    window.location.href = `seat-reservation.html?room=${roomCode}`;
-}
 
 function populateTable(roomCode, floor) {
     const rooms = BUILDING_DATA[`${roomCode.toUpperCase()}_${floor}`];
     const search_table = document.querySelector('.search-table');
+    const timeCells = search_table.rows[0].cells;
 
     for (let room of rooms) {
         let row = search_table.insertRow(-1);
@@ -226,20 +224,16 @@ function populateTable(roomCode, floor) {
         room_row.className = 'room-data';
         room_row.textContent = room;
 
-        for (var i = 1; i < 11; i++) {
-            var cell = row.insertCell(i);
+        for (let i = 1; i < 21; i++) {
+            let cell = row.insertCell(i);
             cell.textContent = room;
             cell.style.color = "transparent";
-        }
-    }
 
-    const cells = document.querySelectorAll('td');
-
-    for (let i = 0; i < cells.length; i++) {
-        if (cells[i].className != 'room-data') {
-            cells[i].addEventListener('click', () => {
-                redirectToSeatReservation(cells[i].textContent)
-            });
+            cell.addEventListener('click', () => {
+                const timeSlot = timeCells[i].textContent.trim();
+                const date = document.querySelector('.date-container').value;
+                redirectToSeatReservation(room, timeSlot, date)
+            })
         }
     }
 }
@@ -260,10 +254,33 @@ const BUILDING_PREFIX = {
 const params = new URLSearchParams(window.location.search);
 const buildingCode = params.get("building");
 const floor = params.get("floor");
-
 const floor_number = floor.match(/\d+/)[0];
-
-console.log(floor_number);
-console.log(buildingCode);
-
 initialize(BUILDING_PREFIX[buildingCode], floor_number);
+
+async function redirectToSeatReservation(room, time, date) {
+    try {
+        const response = await fetch('/view-slot-availability', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({room, time, date})
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+            console.log("View successful: ", data.message);
+            window.location.href = `seat-reservation.html?room=${room}`;
+            sessionStorage.setItem('room', room);
+            sessionStorage.setItem('time', time);
+            sessionStorage.setItem('date', date);
+        }
+        else {
+            console.log('Unsuccessful: ', data.message);
+        }
+    }
+    catch (err) {
+        console.log("Network error: ", err);
+    }
+}

@@ -1473,6 +1473,10 @@ const display_seat = document.querySelector('.display-seat');
 const header_container = document.querySelector('.seat-reservation-information');
 const heading = header_container.querySelector('h1');
 
+function initialize(roomCode) {
+    displayAvailableSeats(roomCode);
+}   
+
 function displayAvailableSeats(roomCode) {
     const room = seats[roomCode];
 
@@ -1483,13 +1487,8 @@ function displayAvailableSeats(roomCode) {
     display_seat.innerHTML += room[`${roomCode}_TEXT`];
 }
 
-function initialize(roomCode) {
-    displayAvailableSeats(roomCode);
-}   
-
 display_seat.addEventListener("click", (e) => {
     const seat = e.target.closest(".seat");
-
     const dropdown = seat.querySelector(".seat-dropdown");
 
     document.querySelectorAll(".seat-dropdown").forEach(d => {
@@ -1506,12 +1505,12 @@ display_seat.addEventListener("click", (e) => {
 });
 
 const params = new URLSearchParams(window.location.search);
-const roomCode = params.get("room");
+let roomCode = params.get("room");
 console.log(roomCode);
 initialize(roomCode);
 
-const reservation_counter = document.getElementById('reservation-counter');
 let reservation_count = 0;
+const reservation_counter = document.getElementById('reservation-counter');
 reservation_counter.textContent = reservation_count;
 
 document.querySelectorAll('button').forEach(button => {
@@ -1524,10 +1523,57 @@ document.querySelectorAll('button').forEach(button => {
 });
 
 const reserve_all_button = document.getElementById('reserve-all-button')
-
 reserve_all_button.addEventListener('click', redirectToReservationForm)
 
-function redirectToReservationForm() {
-    window.location.href = `reservation.html`;
+async function redirectToReservationForm() {
+    try {
+        let start = sessionStorage.getItem('time')
+        let startDate = new Date();
+
+        const [time, modifier] = start.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (modifier === 'PM' && hours < 12) hours += 12;
+        if (modifier === 'AM' && hours === 12) hours = 0;
+
+        startDate.setHours(hours);
+        startDate.setMinutes(minutes + 30);
+
+        let end = startDate.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit', 
+            hour12: true
+        })
+
+        const response = await fetch('/seat-reservation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                building: sessionStorage.getItem('building'),
+                floor: sessionStorage.getItem('floor'),
+                totalSeats: reservation_count,
+                room: sessionStorage.getItem('room'),
+                date: sessionStorage.getItem('date'),
+                startTime: start,
+                endTime: end
+            })
+        })
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('success');
+            sessionStorage.clear();
+            window.location.href = `reservation.html`;
+        }
+        else {
+            console.log('unsuccessful');
+        }
+    }
+    catch (err) {
+        console.log("Network error:", err);
+    }
 }
 

@@ -14,22 +14,10 @@ export type Building<TID = string, TDate = string> = {
 }
 export type BuildingDTO = Building;
 
-export type Lab<TID = string, TDate = string> = {
-    name: string,
+export type Lab<TID = string> = {
     building: TID,
     floor: number,
-    totalSeats: number,
-    location?: string,
-    layout: {
-        type: "seat" | "table";
-        xCoord: number;
-        yCoord: number;
-        width?: number;
-        height?: number;
-        status?: "available" | "reserved" | "unavailable";
-        reservedBy?: TID | null;
-    }[],
-    isActive?: boolean;
+    room: String
 }
 export type LabDTO = Lab;
 
@@ -37,6 +25,7 @@ export type Reservation<TID = string, TDate = string> = {
     user: TID;
     lab: TID;
     seatNumber: number;
+    totalSeats: number;
     date: TDate;
     dateRequested: TDate;
     startTime: TDate;

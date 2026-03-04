@@ -6,19 +6,26 @@ import path from 'path';
 
 import User from './models/user.model';
 import Reservation from './models/reservation.model';
+import Lab from './models/lab.model';
 import { ReservationDTO } from '../shared/modelTypes';
+import { LabDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express();
+const session = require('express-session')
 app.use(express.static(path.join(process.cwd())));
-
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}));
 
-app.post("/signup", async (request, response) => {
+app.post("/signup", async (request: any, response: any) => {
     const {email, password, role} = request.body;
     if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
@@ -36,7 +43,10 @@ app.post("/signup", async (request, response) => {
             role,
             password,
         })
-        await newUser.save();
+        await newUser.save()
+
+        request.session.userID = newUser.id;
+
         return response.status(201).json({ message: "User created!", user: newUser._id});
     } catch (errorRecieved) {
         const error = errorRecieved as any;
@@ -193,10 +203,9 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
     res.status(500).json({ error: 'Failed to update user' });
   }
 });
-
-
+    
 // DASHBOARD-ADMIN
-app.get("/reservations", async (req, res) =>{
+app.get("/reservations", async (_req, res) =>{
     try{
         const reservations = await Reservation.find()
             .populate("lab", "name")
@@ -208,7 +217,7 @@ app.get("/reservations", async (req, res) =>{
     }
 });
 
-app.get("/activities", async(req, res) =>{
+app.get("/activities", async(_req, res) =>{
     try {
         const activities = await Activity.find()
             .populate("user", "firstName lastName")
@@ -237,3 +246,139 @@ function capitalizeFirstLetter(string: string) {
 
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+// RESERVATION FORM
+
+app.get('/reservation', async (_req, res) =>{
+    try { 
+        const formPath = path.join(__dirname, '../../reservation.html');
+
+        return res.sendFile(formPath, (err) => {
+            if (err) {
+                console.error("Error sending file:", err);
+                if (!res.headersSent) {
+                    res.status(404).json({ message: "Reservation form cannot be found" });
+                }   
+            }
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "Cannot load path"});
+    }
+})
+
+app.post('/reservation', async (req, res) => {
+    try {
+        const { building, floor, capacity } = req.body;
+        
+        if (!building) {
+            res.status(400).json({message: "Missing building"});
+        }
+        else if (!floor) {
+            res.status(400).json({message: "Missing floor"});
+        }
+        else if (!capacity) {
+            res.status(400).json({message: "Missing capacity"});
+        }
+        else {
+            res.status(200).json({message: 'Successful reservation redirect'})
+        }
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({message: "Redirect unsuccessful"});
+    }
+})
+
+// SLOT SCHEDULES
+
+app.get('/view-slot-availability', async (_req, res) => {
+    try { 
+        const filePath = path.join(__dirname, '../../view-slot-availability.html');
+
+        return res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error("Could not find file", err);
+                res.status(404).json({message: "Cannot find path"});
+            }
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "Cannot load path"});
+    }
+})
+
+app.post('/view-slot-availability', async (req, res) => {
+    try {
+        const { room, time } = req.body;
+        
+        if (!room) {
+            res.status(400).json({message: "Missing room code"});
+        }
+        else if (!time) {
+            res.status(400).json({message: "Time slot is missing"});
+        }
+        else {
+            res.status(200).json({message: 'Successful reservation redirect'})
+        }
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({message: "Redirect unsuccessful"});
+    }
+})
+
+// FOR SPECIFIC SEATS
+
+app.get('/seat-reservation', async (_req, res) => {
+    try { 
+        const filePath = path.join(__dirname, '../../seat-reservation.html');
+
+        return res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error("Could not find file", err);
+                res.status(404).json({message: "Cannot find path"});
+            }
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({message: "Cannot load path"});
+    }
+})
+
+app.post('/seat-reservation', async (req: any, res: any) => {
+    try {
+        const {building, floor, seatNumber, totalSeats, room, date, startTime, endTime} = req.body;
+
+        const lab_info = {building, floor, room} as LabDTO;
+        const newLab = new Lab(lab_info);
+        
+        let userID: string = req.session.userID;
+        let labID: string = newLab.id;
+        let today = new Date().toISOString();
+
+        const reservation_info: ReservationDTO = {
+            user: userID, 
+            lab: labID,
+            seatNumber: Number(seatNumber),
+            totalSeats: Number(totalSeats),
+            date: date,
+            dateRequested: today,
+            startTime: startTime,
+            endTime: endTime
+        } 
+
+        const newReservation = new Reservation(reservation_info);
+        res.status(200).json({message: "Reservation successful", reservation: newReservation.id});
+    }
+    catch(err) {
+        console.error(err);
+        res.status(500).json({message: "Redirect unsuccessful"});
+    }
+}) 
+
+
+
