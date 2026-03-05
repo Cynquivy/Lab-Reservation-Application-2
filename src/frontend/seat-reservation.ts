@@ -591,6 +591,63 @@ const GK306A_TEXT = `
 </div>
 `
 
+const SJ605_TEXT = `
+<div class="display-seat-row row-spread">
+    ${tableModal}
+    ${tableModal}
+</div>
+
+<div class="display-seat-row row-spread">
+    <div class="seat">
+        ${greenSeatModal}
+        ${availableButtonModal}
+    </div>
+
+    <div class="seat">
+        ${redSeatModal}
+        ${unavailableButtonModal}
+    </div>
+</div>
+`;
+
+const M104D_TEXT = `
+<div class="display-seat-row row-spread">
+    ${tableModal}
+    ${tableModal}
+</div>
+
+<div class="display-seat-row row-spread">
+    <div class="seat">
+        ${greenSeatModal}
+        ${availableButtonModal}
+    </div>
+
+    <div class="seat">
+        ${redSeatModal}
+        ${unavailableButtonModal}
+    </div>
+</div>
+`;
+
+const M101_TEXT = `
+<div class="display-seat-row row-spread">
+    ${tableModal}
+    ${tableModal}
+</div>
+
+<div class="display-seat-row row-spread">
+    <div class="seat">
+        ${greenSeatModal}
+        ${availableButtonModal}
+    </div>
+
+    <div class="seat">
+        ${redSeatModal}
+        ${unavailableButtonModal}
+    </div>
+</div>
+`;
+
 const seats = {
     'SJ605': { SJ605_HEADER, SJ605_TEXT},
     'GK301': { GK301_HEADER, GK301_TEXT},
