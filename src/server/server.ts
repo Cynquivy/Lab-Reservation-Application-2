@@ -478,6 +478,7 @@ app.get("/activities", async(_req, res) =>{
 mongoose.connect("mongodb+srv://marc:marcdb@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
 .then(() =>{
     console.log("Connected to database!");
+    
     app.listen(3000, () => {
         console.log('Server is running on port 3000');
     });

@@ -512,3 +512,16 @@ main table tbody tr:last-child td{
     flex-direction: column;
     gap: 1rem;
 }
+
+.view-more-reservations {
+    display: inline-block;
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--color-white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-more-reservations:hover {
+    text-decoration: underline;
+}

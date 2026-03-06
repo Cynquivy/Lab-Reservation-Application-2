@@ -21,6 +21,16 @@ const LabSchema = new mongoose.Schema<LabDB>(
             type: String,
             enum: LAB_NAMES,
             required: true
+        },
+        
+        totalSeats: {
+            type: Number,
+            required: true
+        },
+
+        occupiedSeats: {
+            type: Number,
+            default: 0
         }
     },
     {

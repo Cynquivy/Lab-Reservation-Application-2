@@ -19,7 +19,9 @@ export type BuildingDTO = Building & {_id: string};
 export type Lab<TID = string> = {
     building: TID,
     floor: number,
-    room: LabName
+    room: LabName,
+    totalSeats: number,
+    occupiedSeats: number
 }
 export type LabDTO = Lab & {_id: string};
 
