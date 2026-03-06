@@ -1,706 +1,434 @@
 // @ts-nocheck
 
-const M101_HEADER = `M101 - Material Testing Laboratory`
-const M104D_HEADER = `M104D - ECE Thesis Room`;
-const GK302A_HEADER = `GK302A - Computer Lab`;
-const SJ605_HEADER = `SJ605 - Microbiology Research Lab`;
+import { BUILDING_LABELS, getLabLayout, normalizeBuildingCode, parseFloorNumber } from "../shared/labSeatConfig.js";
 
-let roomNumber = `bruh fuck you`
+const ROOM_PARAM = "room";
+const DATE_PARAM = "date";
+const START_TIME_PARAM = "startTime";
+const END_TIME_PARAM = "endTime";
 
-const tableModal = `
-    <div class="table">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-            <rect width="700" height="100" fill="var(--color-info-dark)" />
-        </svg>
-    </div>
-`
+const pageParams = new URLSearchParams(window.location.search);
 
-const greenSeatModal = `
-    <svg viewBox="0 0 100 100">
-        <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            <text class="number" x="50" y="55">${roomNumber}</text>
-    </svg>
-`
+const room = pageParams.get(ROOM_PARAM) ?? sessionStorage.getItem("room");
+const buildingCode = normalizeBuildingCode(pageParams.get("building") ?? sessionStorage.getItem("building"));
+const floor = parseFloorNumber(pageParams.get("floor") ?? sessionStorage.getItem("floor"));
+const date = pageParams.get(DATE_PARAM) ?? sessionStorage.getItem("date");
+const startTime = normalizeTimeParam(pageParams.get(START_TIME_PARAM) ?? sessionStorage.getItem("time") ?? sessionStorage.getItem("startTime"));
+const endTime = normalizeTimeParam(pageParams.get(END_TIME_PARAM) ?? sessionStorage.getItem("endTime"));
 
-const redSeatModal = `
-    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-        <circle r="45" cx="50" cy="50" fill="#F06F65" />
-            <text class="number" x="50" y="55">${roomNumber}</text>
-    </svg>
-`
+const displaySeat = document.querySelector(".display-seat");
+const headerContainer = document.querySelector(".seat-reservation-information");
+const heading = headerContainer?.querySelector("h1");
+const description = headerContainer?.querySelector("p");
+const reservationCounterSection = document.querySelector(".reservation-counter");
 
-const availableButtonModal = `
-    <div class="seat-dropdown">
-        <p>Status: Available</p>
-        <button type="button" class="reserve">
-            Reserve
-        </button>
-    </div>
-`
+let occupiedSeats = [];
+let selectedSeats = new Set();
+let refreshTimer = null;
 
-const unavailableButtonModal = `
-    <div class="seat-dropdown">
-        <p>Status: Reserved</p>
-            <p>By: <a href="other-profile.html?id=2" class="user">John Doe</a></span></p>
-    </div>
-`
+document.addEventListener("DOMContentLoaded", async () => {
+    const authOkay = await ensureAuthenticated();
 
-const GK301_TEXT = `
-
-    <div class="display-seat-row row-spread">
-        ${tableModal}
-        ${tableModal}
-    </div>
-
-    <div class="display-seat-row row-spread">
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${redSeatModal}
-                ${unavailableButtonModal}
-            </div>
-        </div>
-
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </div>
-
-
-    <div class="display-seat-row row-spread">
-        ${tableModal}
-        ${tableModal}
-        ${tableModal}
-    </div>
-
-    <div class="display-seat-row row-spread">
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </div>
-
-    <div class="display-seat-row row-spread">
-        ${tableModal}
-        ${tableModal}
-        ${tableModal}
-    </div>
-
-    <div class="display-seat-row row-spread">
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${redSeatModal}
-                ${unavailableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </div>
-
-    <div class="display-seat-row row-spread">
-        ${tableModal}
-        ${tableModal}
-        ${tableModal}
-    </div>
-
-    <div class="display-seat-row row-spread">
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-        <div class="seat-group">
-            <div class="seat">
-                ${redSeatModal}
-                ${unavailableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-            <div class="seat">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </div>
-`
-
-const GK301_HEADER = `GK301 - Computer Lab`;
-
-const GK302A_TEXT =  `
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            ${redSeatModal}
-            ${unavailableButtonModal}
-        </div>
-        <div class="seat col">
-            ${redSeatModal}
-            ${unavailableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${redSeatModal}
-            ${unavailableButtonModal}
-        </div>
-        <div class="seat col">
-            ${redSeatModal}
-            ${unavailableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right: 10.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    ${tableModal}
-    <div class="seat col">
-        ${greenSeatModal}
-        ${availableButtonModal}
-    </div>
-
-    <div class="seat-group-col" style="margin-left: 9rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">  
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-    ${tableModal}
-    <div class="display-seat-row row-spread">
-        <div class="seat-group-col" style="margin-left:51.4rem; margin-top: -1rem">
-            <div class="seat col">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </div>
-</div>
-`;
-
-const GK306A_HEADER = `GK306 - Computer Lab`;
-
-const GK306A_TEXT = `
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            ${redSeatModal}
-            ${unavailableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat-group-col" style="margin-left:17.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right: 10.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-
-<div class="display-seat-row row-spread">
-    ${tableModal}
-    <div class="seat col">
-        ${greenSeatModal}
-        ${availableButtonModal}
-    </div>
-
-    <div class="seat-group-col" style="margin-left: 9rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col" style="margin-right:10.5rem;">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-
-    ${tableModal}
-    ${tableModal}
-
-    <div class="seat-group-col">
-        <div class="seat col">
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-        <div class="seat col">  
-            ${greenSeatModal}
-            ${availableButtonModal}
-        </div>
-    </div>
-</div>
-    ${tableModal}
-    <div class="display-seat-row row-spread">
-        <div class="seat-group-col" style="margin-left:51.4rem; margin-top: -1rem">
-            <div class="seat col">
-                ${greenSeatModal}
-                ${availableButtonModal}
-            </div>
-        </div>
-    </svg>
-</div>
-`
-
-const seats = {
-    'GK301': { GK301_HEADER, GK301_TEXT},
-    'GK302A': { GK302A_HEADER, GK302A_TEXT},
-    'GK306A': { GK306A_HEADER, GK306A_TEXT}
-}
-
-const display_seat = document.querySelector('.display-seat');
-const header_container = document.querySelector('.seat-reservation-information');
-const heading = header_container.querySelector('h1');
-
-function initialize(roomCode) {
-    displayAvailableSeats(roomCode);
-}   
-
-function displayAvailableSeats(roomCode) {
-    const room = seats[roomCode];
-
-    if (!room) 
+    if (!authOkay) {
         return;
+    }
 
-    heading.textContent = room[`${roomCode}_HEADER`];
-    display_seat.innerHTML += room[`${roomCode}_TEXT`];
-}
+    if (!room || !date || !startTime || !endTime || !buildingCode || !floor) {
+        renderFatalState("Missing reservation details. Please start from the availability page.");
+        return;
+    }
 
-display_seat.addEventListener("click", (e) => {
-    const seat = e.target.closest(".seat");
-    const dropdown = seat.querySelector(".seat-dropdown");
+    renderHeader();
+    renderControls();
+    attachControlEvents();
+    await refreshSeatMap();
+    startAutoRefresh();
+});
 
-    document.querySelectorAll(".seat-dropdown").forEach(d => {
-        if (d !== dropdown) 
-            d.style.display = "none";
-    });
-
-    if (dropdown.style.display === "flex"){
-        dropdown.style.display = "none";
-    } else{
-        dropdown.style.display = "flex";
-        dropdown.style.flexDirection = "column";
+window.addEventListener("beforeunload", () => {
+    if (refreshTimer) {
+        window.clearInterval(refreshTimer);
     }
 });
 
-const params = new URLSearchParams(window.location.search);
-let roomCode = params.get("room");
-console.log(roomCode);
-initialize(roomCode);
-
-let reservation_count = 0;
-const reservation_counter = document.getElementById('reservation-counter');
-reservation_counter.textContent = reservation_count;
-
-document.querySelectorAll('.reserve').forEach(button => {
-  button.addEventListener('click', function() {
-    this.disabled = true;
-
-    reservation_count++;
-    reservation_counter.textContent = reservation_count;
-  });
-});
-
-const reserve_all_button = document.getElementById('reserve-all-button')
-reserve_all_button.addEventListener('click', redirectToReservationForm)
-
-async function redirectToReservationForm() {
+async function ensureAuthenticated() {
     try {
-        let start = sessionStorage.getItem('time')
-        let startDate = new Date();
+        const response = await fetch("/auth/me");
 
-        const [time, modifier] = start.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
+        if (response.ok) {
+            return true;
+        }
 
-        if (modifier === 'PM' && hours < 12) hours += 12;
-        if (modifier === 'AM' && hours === 12) hours = 0;
+        window.location.href = "index.html";
+        return false;
+    } catch (error) {
+        renderFatalState("Unable to verify your session. Please log in again.");
+        return false;
+    }
+}
 
-        startDate.setHours(hours);
-        startDate.setMinutes(minutes + 30);
+function renderHeader() {
+    if (heading) {
+        heading.textContent = `${room} - Seat Reservation`;
+    }
 
-        let end = startDate.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit', 
-            hour12: true
-        })
+    if (description) {
+        const buildingLabel = BUILDING_LABELS[buildingCode] ?? buildingCode;
+        description.textContent = `${buildingLabel}, Floor ${floor} • ${formatDateHeading(date)} • ${formatTimeRange(startTime, endTime)}`;
+    }
+}
 
-        const response = await fetch('/seat-reservation', {
-            method: 'POST',
+function renderControls() {
+    if (!reservationCounterSection) {
+        return;
+    }
+
+    reservationCounterSection.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:0.6rem; align-items:flex-start; flex:1;">
+            <h1 style="font-size:1.4rem;">Reservation Count: <span id="reservation-counter">0</span></h1>
+            <label style="display:flex; align-items:center; gap:0.5rem; color: var(--color-white);">
+                <input id="anonymous-toggle" type="checkbox" />
+                <span>Make this reservation anonymous</span>
+            </label>
+            <p id="reservation-message" style="min-height:1.4rem; color: var(--color-white);"></p>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:center;">
+            <button id="reserve-all-button" type="button">Reserve Selected Seats</button>
+        </div>
+    `;
+}
+
+function attachControlEvents() {
+    const reserveButton = document.getElementById("reserve-all-button");
+
+    reserveButton?.addEventListener("click", submitReservation);
+
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".seat")) {
+            document.querySelectorAll(".seat-dropdown").forEach((dropdown) => {
+                dropdown.style.display = "none";
+            });
+        }
+    });
+}
+
+async function refreshSeatMap() {
+    try {
+        const query = new URLSearchParams({
+            room,
+            date,
+            startTime,
+            endTime
+        });
+
+        const response = await fetch(`/reservations/occupied?${query.toString()}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to load occupied seats");
+        }
+
+        occupiedSeats = Array.isArray(data) ? data : [];
+        removeSelectionsThatBecameOccupied();
+        renderSeatMap();
+    } catch (error) {
+        showMessage(error.message || "Unable to load seat availability", true);
+    }
+}
+
+function startAutoRefresh() {
+    refreshTimer = window.setInterval(refreshSeatMap, 15000);
+}
+
+function removeSelectionsThatBecameOccupied() {
+    const occupiedSeatNumbers = new Set(occupiedSeats.map((seat) => seat.seatNumber));
+    let removedCount = 0;
+
+    selectedSeats.forEach((seatNumber) => {
+        if (occupiedSeatNumbers.has(seatNumber)) {
+            selectedSeats.delete(seatNumber);
+            removedCount += 1;
+        }
+    });
+
+    if (removedCount > 0) {
+        showMessage(`${removedCount} selected seat(s) were just reserved by someone else. Please review your selection.`, true);
+    }
+}
+
+function renderSeatMap() {
+    if (!displaySeat) {
+        return;
+    }
+
+    const occupiedBySeat = new Map(occupiedSeats.map((seat) => [seat.seatNumber, seat]));
+    const layoutRows = getLabLayout(room);
+    const rowsMarkup = layoutRows.map(renderLayoutRow.bind(null, occupiedBySeat)).join("");
+
+    displaySeat.innerHTML = `<div class="background"></div>${rowsMarkup}`;
+    attachSeatEvents();
+    updateCounter();
+}
+
+function renderLayoutRow(occupiedBySeat, row) {
+    return `
+        <div class="display-seat-row ${row.className ?? "row-spread"}">
+            ${row.items.map((item) => renderLayoutItem(item, occupiedBySeat)).join("")}
+        </div>
+    `;
+}
+
+function renderLayoutItem(item, occupiedBySeat) {
+    if (item.type === "table") {
+        const tableClass = item.orientation === "column" ? "table table-col" : "table";
+        return `
+            <div class="${tableClass}" ${item.style ? `style="${item.style}"` : ""}>
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect width="700" height="100" fill="var(--color-info-dark)" />
+                </svg>
+            </div>
+        `;
+    }
+
+    if (item.type === "seat") {
+        return buildSeatMarkup(item.seatNumber, occupiedBySeat.get(item.seatNumber), item.style);
+    }
+
+    const containerClass = item.orientation === "column" ? "seat-group-col" : "seat-group";
+    return `
+        <div class="${containerClass}" ${item.style ? `style="${item.style}"` : ""}>
+            ${item.seatNumbers.map((seatNumber) => buildSeatMarkup(seatNumber, occupiedBySeat.get(seatNumber))).join("")}
+        </div>
+    `;
+}
+
+function buildSeatMarkup(seatNumber, occupiedSeat, style = "") {
+    const isOccupied = Boolean(occupiedSeat);
+    const isSelected = selectedSeats.has(seatNumber);
+    const status = isOccupied ? "occupied" : isSelected ? "selected" : "available";
+
+    return `
+        <div class="seat" data-seat-number="${seatNumber}" data-status="${status}" ${style ? `style="${style}"` : ""}>
+            ${buildSeatSvg(seatNumber, isOccupied, isSelected)}
+            <div class="seat-dropdown">
+                ${buildSeatDropdown(seatNumber, occupiedSeat, isSelected)}
+            </div>
+        </div>
+    `;
+}
+
+function attachSeatEvents() {
+    displaySeat?.querySelectorAll(".seat").forEach((seatElement) => {
+        seatElement.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            const seatNumber = Number(seatElement.getAttribute("data-seat-number"));
+            const status = seatElement.getAttribute("data-status");
+            const dropdown = seatElement.querySelector(".seat-dropdown");
+
+            document.querySelectorAll(".seat-dropdown").forEach((otherDropdown) => {
+                if (otherDropdown !== dropdown) {
+                    otherDropdown.style.display = "none";
+                }
+            });
+
+            if (status === "occupied") {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+                dropdown.style.flexDirection = "column";
+                return;
+            }
+
+            if (selectedSeats.has(seatNumber)) {
+                selectedSeats.delete(seatNumber);
+            } else {
+                selectedSeats.add(seatNumber);
+            }
+
+            updateCounter();
+            renderSeatMap();
+        });
+    });
+}
+
+function buildSeatSvg(seatNumber, isOccupied, isSelected) {
+    const fill = isOccupied ? "#F06F65" : isSelected ? "#7380ec" : "#8FC991";
+
+    return `
+        <svg viewBox="0 0 100 100">
+            <circle r="45" cx="50" cy="50" fill="${fill}" />
+            <text class="number" x="50" y="55">${seatNumber}</text>
+        </svg>
+    `;
+}
+
+function buildSeatDropdown(seatNumber, occupiedSeat, isSelected) {
+    if (occupiedSeat) {
+        const reserverName = occupiedSeat.isAnonymous || !occupiedSeat.user
+            ? "Anonymous"
+            : `${occupiedSeat.user.firstName} ${occupiedSeat.user.lastName}`;
+
+        const userMarkup = occupiedSeat.isAnonymous || !occupiedSeat.user
+            ? `<p>By: ${reserverName}</p>`
+            : `<p>By: <a href="other-profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
+
+        return `
+            <p>Status: Reserved</p>
+            ${userMarkup}
+            <p>${formatTimeRange(occupiedSeat.startTime, occupiedSeat.endTime)}</p>
+        `;
+    }
+
+    return `
+        <p>Status: ${isSelected ? "Selected" : "Available"}</p>
+        <p>Seat ${seatNumber}</p>
+        <p>${isSelected ? "Click again to remove" : "Click to select"}</p>
+    `;
+}
+
+function updateCounter() {
+    const counterElement = document.getElementById("reservation-counter");
+
+    if (counterElement) {
+        counterElement.textContent = String(selectedSeats.size);
+    }
+}
+
+async function submitReservation() {
+    if (selectedSeats.size === 0) {
+        showMessage("Select at least one seat before reserving.", true);
+        return;
+    }
+
+    const reserveButton = document.getElementById("reserve-all-button");
+    const anonymousToggle = document.getElementById("anonymous-toggle");
+
+    if (reserveButton) {
+        reserveButton.disabled = true;
+    }
+
+    try {
+        const response = await fetch("/reservations", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ 
-                building: sessionStorage.getItem('building'),
-                floor: sessionStorage.getItem('floor'),
-                room: sessionStorage.getItem('room'),
-                date: sessionStorage.getItem('date'),
-                startTime: start,
-                endTime: end
+            body: JSON.stringify({
+                building: BUILDING_LABELS[buildingCode] ?? buildingCode,
+                floor,
+                room,
+                date,
+                startTime,
+                endTime,
+                seatNumbers: Array.from(selectedSeats).sort((left, right) => left - right),
+                isAnonymous: Boolean(anonymousToggle?.checked)
             })
-        })
+        });
 
         const data = await response.json();
 
-        if (response.ok) {
-            console.log('success');
-            sessionStorage.clear();
-            window.location.href = `reservation.html`;
+        if (!response.ok) {
+            throw new Error(data.message || "Reservation failed");
         }
-        else {
-            console.log('unsuccessful');
+
+        sessionStorage.setItem("room", room);
+        sessionStorage.setItem("date", date);
+        sessionStorage.setItem("startTime", startTime);
+        sessionStorage.setItem("endTime", endTime);
+        showMessage("Reservation created successfully. Redirecting to My Reservations...", false);
+        window.location.href = "my-reservations.html";
+    } catch (error) {
+        showMessage(error.message || "Unable to create reservation", true);
+        await refreshSeatMap();
+    } finally {
+        if (reserveButton) {
+            reserveButton.disabled = false;
         }
-    }
-    catch (err) {
-        console.log("Network error:", err);
     }
 }
 
+function showMessage(message, isError) {
+    const messageElement = document.getElementById("reservation-message");
+
+    if (messageElement) {
+        messageElement.textContent = message;
+        messageElement.style.color = isError ? "#ffbb55" : "#41f1b6";
+    }
+}
+
+function renderFatalState(message) {
+    if (heading) {
+        heading.textContent = "Seat Reservation";
+    }
+
+    if (description) {
+        description.textContent = message;
+    }
+
+    if (displaySeat) {
+        displaySeat.innerHTML = `
+            <div class="background"></div>
+            <p style="position:relative; z-index:1; color:#fff; font-size:1.1rem; padding:2rem;">${message}</p>
+        `;
+    }
+
+    if (reservationCounterSection) {
+        reservationCounterSection.innerHTML = `
+            <p style="color:#fff;">${message}</p>
+        `;
+    }
+}
+
+function normalizeTimeParam(value) {
+    if (!value || typeof value !== "string") {
+        return null;
+    }
+
+    if (/^\d{1,2}:\d{2}\s*(AM|PM)$/i.test(value.trim())) {
+        return value.trim().toUpperCase();
+    }
+
+    if (/^\d{1,2}:\d{2}$/.test(value.trim())) {
+        const [rawHours, rawMinutes] = value.trim().split(":");
+        let hours = Number(rawHours);
+        const minutes = rawMinutes.padStart(2, "0");
+        const period = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12;
+        if (hours === 0) {
+            hours = 12;
+        }
+
+        return `${hours}:${minutes} ${period}`;
+    }
+
+    const parsedDate = new Date(value);
+
+    if (!Number.isNaN(parsedDate.getTime())) {
+        return parsedDate.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+        }).toUpperCase();
+    }
+
+    return null;
+}
+
+function formatDateHeading(dateValue) {
+    const parsedDate = new Date(`${dateValue}T00:00:00`);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+        return dateValue;
+    }
+
+    return parsedDate.toLocaleDateString([], {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+
+function formatTimeRange(startValue, endValue) {
+    return `${normalizeTimeParam(startValue) ?? startValue} to ${normalizeTimeParam(endValue) ?? endValue}`;
+}

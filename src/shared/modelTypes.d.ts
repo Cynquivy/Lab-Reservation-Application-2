@@ -19,7 +19,9 @@ export type BuildingDTO = Building & {_id: string};
 export type Lab<TID = string> = {
     building: TID,
     floor: number,
-    room: LabName
+    room: LabName,
+    name?: string,
+    totalSeats?: number
 }
 export type LabDTO = Lab & {_id: string};
 
@@ -41,8 +43,9 @@ export type User<TID = string, TDate = string> = {
     lastName: string;
     email: string;
     password: string;
-    role?: "Student" | "Admin";
+    role?: "Student" | "Lab Technician";
     profileImage?: string;
+    description?: string;
     isActive?: boolean;
     studentID?: string;
     course?: string;
