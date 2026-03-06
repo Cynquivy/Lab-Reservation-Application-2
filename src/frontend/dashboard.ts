@@ -91,6 +91,8 @@ document.addEventListener("DOMContentLoaded", async() => {
     }
 });
 
+
+let visibleReservationCount = 5;
 function updateReservations(reservations: any[]){
     const upcomingTable = document.querySelector("#upcoming-reservations");
     const upcomingTableBody = upcomingTable?.querySelector("tbody");
@@ -109,28 +111,50 @@ function updateReservations(reservations: any[]){
 
     const today = new Date();
 
-    reservations.forEach(r => {
-        const reservationDate = new Date(r.date);
-        const startTime = new Date(r.startTime);
-        const endTime = new Date(r.endTime);
+    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-        if(reservationDate.toDateString() === today.toDateString()) 
-            count += 1;
-        
-        const tr = document.createElement("tr");
-        tr.innerHTML =
-            `
+    let showedReservations = sortedByDateReservations;
+    showedReservations.forEach(r => {
+        if(r.status !== 'cancelled' && r.status !== 'past'){
+            const reservationDate = new Date(r.date);
+
+            if(reservationDate.toDateString() === today.toDateString()) 
+                count += 1;
+            
+            const tr = document.createElement("tr");
+            let status = capitalizeFirstLetter(r.status);
+            console.log(status);
+            tr.innerHTML = `
                 <td>${r.lab.room}</td>
-                <td>${new Date(r.dateRequested).toLocaleString()}</td>
-                <td>${r.Date.toLocaleString()} · ${startTime.getHours()}:${startTime.getMinutes()}-${endTime.getHours()}:${endTime.getMinutes()}</td>
+                <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
+                <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
                 <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
-                <td class = "${r.status === 'today' ? 'warning' : 'success'}">${r.status}</td>
+                <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
             `;
-        upcomingTable.appendChild(tr);
+            upcomingTableBody.appendChild(tr);
+        }
     });
+
+    if (reservations.length > visibleReservationCount) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="5" style="text-align:right; padding-right: 1rem;">
+                <a href="my-reservations.html" class="view-more-reservations">View More</a>
+            </td>
+        `;
+        upcomingTableBody.appendChild(tr);
+    }
 
     if(noUpcoming) noUpcoming.textContent = String(count);
     if(noReservations) noReservations.textContent = String(reservations.length);
+}
+
+function capitalizeFirstLetter(string: string) {
+  if (!string || string.length === 0) { 
+    return "";
+  }
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 
@@ -164,7 +188,7 @@ function updateRecentActivity(activities: any[]){
         activityList.appendChild(li);
     });
 
-    if(visibleCount < sortedActivities.length){
+    if(visibleCount <= 10){
         const viewMore = document.createElement('li');
         viewMore.classList.add("view-more-activity");
 
@@ -200,6 +224,21 @@ function formatTimePassed(date: Date) {
     } else {
         return `${days} day${days !== 1 ? "s" : ""} ago`;
     }
+}
+
+function formatDate(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatTime(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${hh}:${min}`;
 }
 
 loadUserImg();

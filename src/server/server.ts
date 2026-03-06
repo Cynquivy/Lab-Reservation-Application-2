@@ -169,15 +169,36 @@ app.get(`/lab/id/:id`, async (request, response) => {
 app.post(`/reservations`, async (request: any, response) => {
     try {
         const currentUser = await requireAuth(request);
+
         const newReservation = await createReservationFromPayload(request.body, currentUser);
+
+        const seatNumbers = request.body.seatNumbers || [];
+
+        const activityPromises = seatNumbers.map((seatNumber: number) => {
+            const activity = new Activity({
+                user: currentUser._id,
+                reservation: newReservation._id,
+                action: "reserved",
+                seatNumber: seatNumber,
+                labName: request.body.room,
+                timestamp: new Date()
+            });
+
+            return activity.save();
+        });
+
+        await Promise.all(activityPromises);
 
         return response.status(201).json({
             message: `Reservation created`,
             id: newReservation.id,
             reservation: serializeReservation(newReservation)
         });
+
     } catch (error) {
-        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
+        return response
+            .status(getErrorStatus(error))
+            .json({ message: (error as Error).message });
     }
 });
 
