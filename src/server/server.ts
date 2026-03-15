@@ -288,9 +288,10 @@ app.get("/reservations/id/:id", async (request: any, response) => {
 });
 
 // FOR DASHBOARD
-app.get("/users/:id", async (req, res) => {
+app.get("/users", async (req, res) => {
     try{
-        const user = await User.findById(req.params.id).select("-password");
+        const id = (await requireAuth(req))._id;
+        const user = await User.findById(id).select("-password");
         
         if(!user){
             return res.status(400).json({message: "User not found"});
@@ -384,15 +385,15 @@ app.put("/reservations/:id", async (request: any, response) => {
     }
 });
 
-app.get("/reservations/user/:id", async (request: any, response) => {
+app.get("/reservations/user", async (request, response) => {
     try {
         const currentUser = await requireAuth(request);
 
-        if (!canViewReservationCollection(currentUser, request.params.id)) {
+        if (!canViewReservationCollection(currentUser, currentUser._id.toString())) {
             return response.status(403).json({ message: "You are not allowed to view these reservations" });
         }
 
-        const reservations = await Reservation.find({ user: request.params.id })
+        const reservations = await Reservation.find({ user: currentUser._id })
             .populate("lab", "room")
             .sort({ date: 1, startTime: 1 });
 
@@ -588,9 +589,10 @@ app.get("/availability", async (request, response) => {
 });
 
 
-app.get("/activities/user/:id", async (req, res) =>{
+app.get("/activities/user", async (req, res) =>{
     try{
-        const activities = await Activity.find({user: req.params.id})
+        const user = await requireAuth(req);
+        const activities = await Activity.find({user: user._id})
             .sort({timestamp: -1})
 
         res.json(activities);

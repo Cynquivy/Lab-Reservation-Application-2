@@ -6,18 +6,6 @@ export type UserID = string & {_brand: "UserID"}
 export type ReservationID = string & {_brand: "ReservationID"}
 
 export namespace ClientDBUtil {
-    /**
-     * Gets the current logged in user ID from sessionStorage.
-     * Redirects to home page if not logged in.
-     */
-    export function getCurrentUserID(): UserID {
-        const currentUserID = sessionStorage.getItem("user");
-        if (currentUserID === null) {
-            window.location.href = "index.html";
-            throw new Error("Not logged in");
-        }
-        return currentUserID as UserID;
-    }
 
     /**
      * Validates if the user is logged in.
@@ -40,7 +28,7 @@ export namespace ClientDBUtil {
      * @returns the user object without password
      */
     export async function getCurrentUser(): Promise<Omit<UserDTO, "password">> {
-        const response = await fetch(`/users/${getCurrentUserID()}`);
+        const response = await fetch(`/users`);
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
         return response.json() as Promise<Omit<UserDTO, "password">>;
     }
@@ -87,7 +75,7 @@ export namespace ClientDBUtil {
      * @returns an array of ReservationDTO objects
      */
     export async function getCurrentReservations(): Promise<ReservationDTO[]> {
-        const response = await fetch(`/reservations/user/${getCurrentUserID()}`);
+        const response = await fetch(`/reservations/user`);
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
         return response.json() as Promise<ReservationDTO[]>;
     }
@@ -119,7 +107,7 @@ export namespace ClientDBUtil {
         const labID = await getLabIDFromLabCode(labRoomCode);
         const response = await fetch(`/reservations`, {
             method: "POST",
-            body: JSON.stringify({...reservationData, lab: labID, user: getCurrentUserID()}),
+            body: JSON.stringify({...reservationData, lab: labID}),
             headers: {"Content-Type": "application/json"},
         });
 
