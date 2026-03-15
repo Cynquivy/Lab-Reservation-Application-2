@@ -9,6 +9,29 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
   - IMPORTANT: LABS array to be replaced with NoSql query, it's there for the MCO1 demo.
 */
 
+const userID = sessionStorage.getItem("user");
+
+const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
+
+async function loadUserImg(){
+    try{
+        const res = await fetch(`http://localhost:3000/users/${userID}`);
+
+        if(!res.ok){
+            throw new Error("Failed to load profile");
+        }
+
+        const user = await res.json();
+
+        if(profileImage) {
+            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        }
+
+    } catch(error){
+        console.error("Error loading profile: ", error);
+    }
+}
+
 (function () {
   const STORAGE_KEY = "labynx_reservations_v1";
   const loggedInUserID = "12345678"; // placeholder until auth is implemented
@@ -589,3 +612,5 @@ openModal(id, "view"); // switch back to view
 
   init();
 })();
+
+loadUserImg();
