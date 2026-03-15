@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema<UserDB>(
 
         role: {
             type: String,
-            enum: ["Student", "Admin"],
+            enum: ["Student", "Lab Technician"],
             default: "Student",
             required: true,
         },
@@ -36,6 +36,11 @@ const UserSchema = new mongoose.Schema<UserDB>(
         profileImage: {
             type: String,
             default: "default.webp"
+        },
+
+        description: {
+            type: String,
+            default: ""
         },
 
         isActive: {

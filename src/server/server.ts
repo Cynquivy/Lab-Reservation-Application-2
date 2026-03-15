@@ -10,6 +10,7 @@ import Lab from './models/lab.model';
 import { ActivityDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 import Building from './models/building.model';
+import { BUILDING_LABELS, LAB_SEAT_CONFIG, getLabsForBuildingFloor, normalizeBuildingCode, parseFloorNumber } from '../shared/labSeatConfig';
 import { promisify } from 'util';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
@@ -27,14 +28,16 @@ app.use(session({
 }));
 
 app.post("/signup", async (request: any, response: any) => {
-    const {email, password, role} = request.body;
+    const { email, password } = request.body;
+
     if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
         return;
     }
 
     try {
-        const defaultUsername= email.split("@")[0];
+        const role = normalizeUserRole(request.body.role);
+        const defaultUsername = email.split("@")[0];
         const defaultFirstName = capitalizeFirstLetter(defaultUsername.split("_")[0]);
         const defaultLastName = capitalizeFirstLetter(defaultUsername.split("_")[1]);
         const newUser = new User({
@@ -43,20 +46,21 @@ app.post("/signup", async (request: any, response: any) => {
             email,
             role,
             password,
-        })
-        await newUser.save()
+        });
+        await newUser.save();
 
         request.session.userID = newUser.id;
 
-        return response.status(201).json({ message: "User created!", user: newUser._id});
+        return response.status(201).json({ message: "User created!", user: newUser._id });
     } catch (errorRecieved) {
         const error = errorRecieved as any;
-        if (error.code === 11000) //11000 is code for attempting to add an existing document field with a unique key
-           return response.status(400).json({message: "Account with email already exists!"})
+        if (error.code === 11000) {
+            return response.status(400).json({ message: "Account with email already exists!" });
+        }
 
-        return response.status(400).json({ message: error.message});
+        return response.status(getErrorStatus(error)).json({ message: error.message });
     }
-})
+});
 
 
 app.post("/login", async (request: any, response: any) => {
@@ -164,29 +168,46 @@ app.get(`/lab/id/:id`, async (request, response) => {
 
 app.post(`/reservations`, async (request: any, response) => {
     try {
-        const newReservation = await createReservationFromPayload(request.body, request.session?.userID);
+        const currentUser = await requireAuth(request);
+
+        const newReservation = await createReservationFromPayload(request.body, currentUser);
+
+        await createReservationActivities(newReservation, "reserved");
 
         return response.status(201).json({
             message: `Reservation created`,
             id: newReservation.id,
             reservation: serializeReservation(newReservation)
         });
-    } catch (error) {
-        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
-    }
-})
 
-app.delete("/reservations/:id", async (request, response) => {
+    } catch (error) {
+        const details = typeof error === "object" && error !== null && "details" in error
+            ? (error as { details?: unknown }).details
+            : undefined;
+
+        return response
+            .status(getErrorStatus(error))
+            .json({ message: (error as Error).message, ...(details ? { details } : {}) });
+    }
+});
+
+app.delete("/reservations/:id", async (request: any, response) => {
     try {
+        const currentUser = await requireAuth(request);
         const reservation = await Reservation.findById(request.params.id).populate("lab", "room");
 
         if (!reservation) {
             return response.status(404).json({ message: "Reservation not found" });
         }
 
+        if (!canEditReservation(currentUser, reservation)) {
+            return response.status(403).json({ message: "You are not allowed to cancel this reservation" });
+        }
+
         if (reservation.status !== "cancelled") {
             reservation.status = "cancelled";
             await reservation.save();
+            await createReservationActivities(reservation, "cancelled");
         }
 
         return response.json({
@@ -194,22 +215,27 @@ app.delete("/reservations/:id", async (request, response) => {
             reservation: serializeReservation(reservation)
         });
     } catch (error) {
-        return response.status(400).json({ message: (error as any).message });
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });
 
-app.get("/reservations/id/:id", async (req, res) => {
+app.get("/reservations/id/:id", async (request: any, response) => {
     try {
-        const reservation = await Reservation.findById(req.params.id)
+        const currentUser = await requireAuth(request);
+        const reservation = await Reservation.findById(request.params.id)
             .populate("lab", "room");
 
         if (!reservation) {
-            return res.status(404).json({ message: "Reservation not found" });
+            return response.status(404).json({ message: "Reservation not found" });
         }
 
-        return res.json(serializeReservation(reservation));
+        if (!canViewReservation(currentUser, reservation)) {
+            return response.status(403).json({ message: "You are not allowed to view this reservation" });
+        }
+
+        return response.json(serializeReservation(reservation));
     } catch (error) {
-        return res.status(500).json({ message: (error as any).message });
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });
 
@@ -228,12 +254,17 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
-app.put("/reservations/:id", async (request, response) => {
+app.put("/reservations/:id", async (request: any, response) => {
     try {
+        const currentUser = await requireAuth(request);
         const existingReservation = await Reservation.findById(request.params.id);
 
         if (!existingReservation) {
             return response.status(404).json({ message: "Reservation not found" });
+        }
+
+        if (!canEditReservation(currentUser, existingReservation)) {
+            return response.status(403).json({ message: "You are not allowed to edit this reservation" });
         }
 
         const nextLab = await resolveLabFromPayload({
@@ -245,6 +276,8 @@ app.put("/reservations/:id", async (request, response) => {
             request.body.seatNumbers === undefined && request.body.seatNumber === undefined
                 ? existingReservation.seatNumbers
                 : normalizeSeatNumbers(request.body);
+
+        ensureSeatNumbersWithinLabCapacity(nextLab.room, nextSeatNumbers);
 
         const nextDate = request.body.date === undefined
             ? parseDateOnly(existingReservation.date)
@@ -259,6 +292,7 @@ app.put("/reservations/:id", async (request, response) => {
             : combineDateAndTime(nextDate, request.body.endTime);
 
         ensureThirtyMinuteSlotRange(nextStartTime, nextEndTime);
+        ensureReservationStartsInFuture(nextStartTime);
 
         const conflictingReservations = await findConflictingReservations(
             nextLab.id,
@@ -280,7 +314,7 @@ app.put("/reservations/:id", async (request, response) => {
 
         existingReservation.lab = nextLab._id;
         existingReservation.seatNumbers = nextSeatNumbers;
-        existingReservation.isAnonymous = Boolean(request.body.isAnonymous ?? existingReservation.isAnonymous ?? false);
+        existingReservation.isAnonymous = normalizeBoolean(request.body.isAnonymous, existingReservation.isAnonymous ?? false);
         existingReservation.date = nextDate;
         existingReservation.startTime = nextStartTime;
         existingReservation.endTime = nextEndTime;
@@ -289,8 +323,8 @@ app.put("/reservations/:id", async (request, response) => {
             existingReservation.dateRequested = parseFlexibleDate(request.body.dateRequested, "dateRequested");
         }
 
-        if (request.body.status !== undefined) {
-            existingReservation.status = request.body.status;
+        if (request.body.status === "cancelled") {
+            existingReservation.status = "cancelled";
         }
 
         await existingReservation.save();
@@ -302,15 +336,21 @@ app.put("/reservations/:id", async (request, response) => {
     }
 });
 
-app.get("/reservations/user/:id", async (req, res) => {
+app.get("/reservations/user/:id", async (request: any, response) => {
     try {
-        const reservations = await Reservation.find({ user: req.params.id })
+        const currentUser = await requireAuth(request);
+
+        if (!canViewReservationCollection(currentUser, request.params.id)) {
+            return response.status(403).json({ message: "You are not allowed to view these reservations" });
+        }
+
+        const reservations = await Reservation.find({ user: request.params.id })
             .populate("lab", "room")
             .sort({ date: 1, startTime: 1 });
 
-        return res.json(reservations.map(serializeReservation));
+        return response.json(reservations.map(serializeReservation));
     } catch (error) {
-        return res.status(400).json({ message: (error as any).message });
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });
 
@@ -393,6 +433,113 @@ app.get("/reservations/occupied", async (request, response) => {
     }
 });
 
+
+app.get("/availability", async (request, response) => {
+    try {
+        const buildingCode = normalizeBuildingCode(typeof request.query.building === "string" ? request.query.building : undefined);
+        const floor = parseFloorNumber(typeof request.query.floor === "string" ? request.query.floor : undefined);
+        const date = typeof request.query.date === "string" ? request.query.date : undefined;
+
+        if (!buildingCode || !floor || !date) {
+            return response.status(400).json({
+                message: "building, floor, and date are required"
+            });
+        }
+
+        const roomNames = getLabsForBuildingFloor(buildingCode, floor);
+
+        if (roomNames.length === 0) {
+            return response.json({
+                building: buildingCode,
+                buildingLabel: BUILDING_LABELS[buildingCode],
+                floor,
+                date,
+                rooms: [],
+                slots: buildDailyTimeSlots(date).map(({ startDateTime, endDateTime, ...slot }) => slot)
+            });
+        }
+
+        const dayRange = getDayRange(date);
+        const labs = await Lab.find({
+            $or: [
+                { room: { $in: roomNames } },
+                { name: { $in: roomNames } }
+            ]
+        }).select("_id room name");
+
+        const labIdByRoom = new Map(
+            labs.map((lab: any) => [lab.room || lab.name, String(lab._id)])
+        );
+        const availableLabIds = Array.from(labIdByRoom.values());
+
+        const reservations = availableLabIds.length === 0
+            ? []
+            : await Reservation.find({
+                lab: { $in: availableLabIds },
+                status: { $ne: "cancelled" },
+                date: { $gte: dayRange.start, $lt: dayRange.end }
+            })
+                .populate("lab", "room name")
+                .sort({ startTime: 1 });
+
+        const slotDefinitions = buildDailyTimeSlots(date);
+
+        const rooms = roomNames.map((roomName) => {
+            const roomReservations = reservations.filter((reservation: any) => {
+                const reservationRoom = reservation.lab?.room || reservation.lab?.name;
+                return reservationRoom === roomName;
+            });
+
+            const capacity = getLabCapacity(roomName);
+
+            const slots = slotDefinitions.map((slot) => {
+                const overlappingReservations = roomReservations.filter((reservation: any) =>
+                    new Date(reservation.startTime).getTime() < slot.endDateTime.getTime()
+                    && new Date(reservation.endTime).getTime() > slot.startDateTime.getTime()
+                );
+
+                const occupiedSeatNumbers = Array.from(
+                    new Set(
+                        overlappingReservations.flatMap((reservation: any) =>
+                            Array.isArray(reservation.seatNumbers) ? reservation.seatNumbers : []
+                        )
+                    )
+                ).sort((left, right) => left - right);
+
+                const occupiedCount = occupiedSeatNumbers.length;
+                const remainingSeats = Math.max(0, capacity - occupiedCount);
+
+                return {
+                    startTime: slot.startTime,
+                    endTime: slot.endTime,
+                    occupiedCount,
+                    remainingSeats,
+                    occupiedSeatNumbers,
+                    status: occupiedCount === 0 ? "available" : remainingSeats === 0 ? "full" : "partial"
+                };
+            });
+
+            return {
+                room: roomName,
+                capacity,
+                slots
+            };
+        });
+
+        return response.json({
+            building: buildingCode,
+            buildingLabel: BUILDING_LABELS[buildingCode],
+            floor,
+            date,
+            rooms,
+            slots: slotDefinitions.map(({ startDateTime, endDateTime, ...slot }) => slot)
+        });
+    } catch (error) {
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
+    }
+});
+
+
 app.get("/activities/user/:id", async (req, res) =>{
     try{
         const activities = await Activity.find({user: req.params.id})
@@ -452,16 +599,17 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
 });
     
 // DASHBOARD-ADMIN
-app.get("/reservations", async (_, res) => {
+app.get("/reservations", async (request: any, response) => {
     try {
+        await requireTechnician(request);
         const reservations = await Reservation.find()
             .populate("lab", "room")
             .populate("user", "firstName lastName")
             .sort({ date: 1, startTime: 1 });
 
-        return res.json(reservations.map(serializeReservation));
+        return response.json(reservations.map(serializeReservation));
     } catch (error) {
-        return res.status(400).json({ message: (error as any).message });
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });
 
@@ -504,10 +652,224 @@ function getErrorStatus(error: unknown) {
         : 500;
 }
 
-function createHttpError(status: number, message: string) {
-    const error = new Error(message) as Error & { status: number };
+function createHttpError(status: number, message: string, details?: Record<string, unknown>) {
+    const error = new Error(message) as Error & { status: number; details?: Record<string, unknown> };
     error.status = status;
+
+    if (details) {
+        error.details = details;
+    }
+
     return error;
+}
+
+
+const TECHNICIAN_ROLES = new Set<string>(["Lab Technician", "Admin"]);
+const RESERVATION_STATUSES = new Set(["upcoming", "today", "past", "cancelled"]);
+
+function normalizeUserRole(role: unknown) {
+    if (role === "Admin") {
+        return "Lab Technician";
+    }
+
+    if (role === "Lab Technician" || role === "Student" || role === undefined || role === null || role === "") {
+        return role === "Lab Technician" ? "Lab Technician" : "Student";
+    }
+
+    throw createHttpError(400, "Role must be either Student or Lab Technician");
+}
+
+function normalizeBoolean(value: unknown, fallback = false) {
+    if (typeof value === "boolean") {
+        return value;
+    }
+
+    if (typeof value === "string") {
+        const normalized = value.trim().toLowerCase();
+
+        if (["true", "1", "yes", "on"].includes(normalized)) {
+            return true;
+        }
+
+        if (["false", "0", "no", "off", ""].includes(normalized)) {
+            return false;
+        }
+    }
+
+    if (typeof value === "number") {
+        if (value === 1) {
+            return true;
+        }
+
+        if (value === 0) {
+            return false;
+        }
+    }
+
+    if (value === undefined || value === null) {
+        return fallback;
+    }
+
+    throw createHttpError(400, "Invalid boolean value");
+}
+
+function getDocumentId(value: any) {
+    if (!value) {
+        return "";
+    }
+
+    if (typeof value === "string") {
+        return value;
+    }
+
+    if (typeof value.toString === "function") {
+        return value.toString();
+    }
+
+    return String(value);
+}
+
+function hasTechnicianRole(user: any) {
+    return TECHNICIAN_ROLES.has(String(user?.role ?? ""));
+}
+
+function hasStudentRole(user: any) {
+    return String(user?.role ?? "") === "Student";
+}
+
+async function getCurrentUserFromSession(request: any) {
+    const userID = request.session?.userID;
+
+    if (!userID) {
+        return null;
+    }
+
+    const currentUser = await User.findById(userID);
+
+    if (!currentUser) {
+        request.session.userID = undefined;
+        return null;
+    }
+
+    return currentUser;
+}
+
+async function requireAuth(request: any) {
+    const currentUser = await getCurrentUserFromSession(request);
+
+    if (!currentUser) {
+        throw createHttpError(401, "You must be logged in to continue");
+    }
+
+    return currentUser;
+}
+
+async function requireStudent(request: any) {
+    const currentUser = await requireAuth(request);
+
+    if (!hasStudentRole(currentUser)) {
+        throw createHttpError(403, "Only students can perform this action");
+    }
+
+    return currentUser;
+}
+
+void requireStudent;
+
+async function requireTechnician(request: any) {
+    const currentUser = await requireAuth(request);
+
+    if (!hasTechnicianRole(currentUser)) {
+        throw createHttpError(403, "Only lab technicians can perform this action");
+    }
+
+    return currentUser;
+}
+
+function canViewReservationCollection(currentUser: any, requestedUserId: string) {
+    if (hasTechnicianRole(currentUser)) {
+        return true;
+    }
+
+    return getDocumentId(currentUser._id) === requestedUserId;
+}
+
+function canViewReservation(currentUser: any, reservation: any) {
+    if (hasTechnicianRole(currentUser)) {
+        return true;
+    }
+
+    return getDocumentId(currentUser._id) === getDocumentId(reservation.user);
+}
+
+function canEditReservation(currentUser: any, reservation: any) {
+    if (hasTechnicianRole(currentUser)) {
+        return true;
+    }
+
+    return hasStudentRole(currentUser) && getDocumentId(currentUser._id) === getDocumentId(reservation.user);
+}
+
+async function resolveReservationUserForCreate(payload: any, currentUser: any) {
+    if (hasTechnicianRole(currentUser)) {
+        const targetUserID = typeof payload.user === "string" && payload.user.trim().length > 0
+            ? payload.user.trim()
+            : getDocumentId(currentUser._id);
+
+        const targetUser = await User.findById(targetUserID);
+
+        if (!targetUser) {
+            throw createHttpError(404, "Reservation user not found");
+        }
+
+        if (!hasStudentRole(targetUser)) {
+            throw createHttpError(400, "Reservations can only be created for student accounts");
+        }
+
+        return targetUser;
+    }
+
+    if (!hasStudentRole(currentUser)) {
+        throw createHttpError(403, "Only students or lab technicians can create reservations");
+    }
+
+    if (payload.user !== undefined && payload.user !== null && payload.user !== "" && payload.user !== getDocumentId(currentUser._id)) {
+        throw createHttpError(403, "Students can only create reservations for themselves");
+    }
+
+    return currentUser;
+}
+
+function getLabCapacity(room: string) {
+    return LAB_SEAT_CONFIG[room as keyof typeof LAB_SEAT_CONFIG]?.capacity ?? 20;
+}
+
+function ensureSeatNumbersWithinLabCapacity(room: string, seatNumbers: number[]) {
+    const capacity = getLabCapacity(room);
+
+    if (seatNumbers.some((seatNumber) => seatNumber > capacity)) {
+        throw createHttpError(400, `Seat numbers must be between 1 and ${capacity} for ${room}`);
+    }
+}
+
+function ensureReservationStartsInFuture(startTime: Date) {
+    const now = new Date();
+
+    if (startTime.getTime() < now.getTime()) {
+        throw createHttpError(400, "Reservations must start in the future");
+    }
+}
+
+function normalizeReservationStatus(value: unknown, fallback: "upcoming" | "today" | "past" | "cancelled" = "upcoming") {
+    if (value === undefined || value === null || value === "") {
+        return fallback;
+    }
+
+    if (typeof value === "string" && RESERVATION_STATUSES.has(value)) {
+        return value as "upcoming" | "today" | "past" | "cancelled";
+    }
+
+    throw createHttpError(400, "Invalid reservation status");
 }
 
 function parseFlexibleDate(value: string | Date, fieldName: string) {
@@ -587,6 +949,44 @@ function getDayRange(value: string | Date) {
     return { start, end };
 }
 
+
+function buildDailyTimeSlots(dateValue: string | Date) {
+    const slotDefinitions: Array<{
+        startTime: string;
+        endTime: string;
+        label: string;
+        startDateTime: Date;
+        endDateTime: Date;
+    }> = [];
+
+    for (let hour = 8; hour < 18; hour += 1) {
+        for (const minute of [0, 30]) {
+            const startTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+            const endHour = minute === 30 ? hour + 1 : hour;
+            const endMinute = minute === 30 ? 0 : 30;
+            const endTime = `${String(endHour).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
+
+            const startDateTime = combineDateAndTime(dateValue, startTime);
+            const endDateTime = combineDateAndTime(dateValue, endTime);
+
+            slotDefinitions.push({
+                startTime,
+                endTime,
+                label: startDateTime.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true
+                }),
+                startDateTime,
+                endDateTime
+            });
+        }
+    }
+
+    return slotDefinitions;
+}
+
+
 async function resolveBuildingFromPayload(payload: any) {
     const rawBuilding = payload.building;
     const floor = Number(payload.floor);
@@ -658,30 +1058,115 @@ async function resolveLabFromPayload(payload: any) {
             throw createHttpError(404, "Lab not found");
         }
 
-        return existingLab;
+        return synchronizeLabRecord(existingLab, existingLab.building, existingLab.floor, existingLab.room);
     }
 
     const floor = Number(payload.floor);
-    const room = payload.room;
+    const room = normalizeRoomCode(payload.room);
 
-    if (!room || !Number.isInteger(floor)) {
+    if (!Number.isInteger(floor)) {
         throw createHttpError(400, "Missing floor or room for reservation");
     }
 
     const buildingDoc = await resolveBuildingFromPayload(payload);
 
-    let existingLab = await Lab.findOne({
-        building: buildingDoc._id,
-        floor,
-        room
-    });
+    const existingLab = await findLabByRoomOrLegacyName(room);
 
-    if (!existingLab) {
-        existingLab = await Lab.create({
+    if (existingLab) {
+        return synchronizeLabRecord(existingLab, buildingDoc._id, floor, room);
+    }
+
+    try {
+        const createdLab = await Lab.create({
+            name: room,
             building: buildingDoc._id,
             floor,
-            room
+            room,
+            totalSeats: getLabCapacity(room)
         });
+
+        return createdLab;
+    } catch (error: any) {
+        if (error?.code === 11000) {
+            const recoveredLab = await findLabByRoomOrLegacyName(room);
+
+            if (recoveredLab) {
+                return synchronizeLabRecord(recoveredLab, buildingDoc._id, floor, room);
+            }
+        }
+
+        throw error;
+    }
+}
+
+function normalizeRoomCode(value: unknown) {
+    if (typeof value !== "string" || value.trim().length === 0) {
+        throw createHttpError(400, "Missing floor or room for reservation");
+    }
+
+    return value.trim();
+}
+
+async function findLabByRoomOrLegacyName(room: string) {
+    const labByRoom = await Lab.findOne({ room });
+
+    if (labByRoom) {
+        return labByRoom;
+    }
+
+    const labByLegacyName = await Lab.findOne({ name: room });
+
+    if (labByLegacyName) {
+        return labByLegacyName;
+    }
+
+    return null;
+}
+
+async function synchronizeLabRecord(existingLab: any, buildingId: any, floor: number, room: string) {
+    let shouldSave = false;
+
+    if (existingLab.name !== room) {
+        existingLab.name = room;
+        shouldSave = true;
+    }
+
+    if (existingLab.room !== room) {
+        existingLab.room = room;
+        shouldSave = true;
+    }
+
+    if (getDocumentId(existingLab.building) !== getDocumentId(buildingId)) {
+        existingLab.building = buildingId;
+        shouldSave = true;
+    }
+
+    if (existingLab.floor !== floor) {
+        existingLab.floor = floor;
+        shouldSave = true;
+    }
+
+    const expectedCapacity = getLabCapacity(room);
+
+    if (existingLab.totalSeats !== expectedCapacity) {
+        existingLab.totalSeats = expectedCapacity;
+        shouldSave = true;
+    }
+
+    if (shouldSave) {
+        try {
+            await existingLab.save();
+        } catch (error: any) {
+            if (error?.code === 11000) {
+                const canonicalLab = await Lab.findOne({ room });
+
+                if (canonicalLab) {
+                    return canonicalLab;
+                }
+            }
+
+            throw error;
+        }
     }
 
     return existingLab;
@@ -775,17 +1260,12 @@ function extractConflictingSeatNumbers(existingReservations: any[], requestedSea
     return [...conflictingSeatSet].sort((a, b) => a - b);
 }
 
-async function createReservationFromPayload(payload: any, sessionUserID?: string) {
-    const userID = typeof payload.user === "string" && payload.user.length > 0
-        ? payload.user
-        : sessionUserID;
-
-    if (!userID) {
-        throw createHttpError(401, "You must be logged in to create a reservation");
-    }
-
+async function createReservationFromPayload(payload: any, currentUser: any) {
+    const reservationUser = await resolveReservationUserForCreate(payload, currentUser);
     const lab = await resolveLabFromPayload(payload);
     const seatNumbers = normalizeSeatNumbers(payload);
+
+    ensureSeatNumbersWithinLabCapacity(lab.room, seatNumbers);
 
     if (!payload.date || !payload.startTime || !payload.endTime) {
         throw createHttpError(400, "date, startTime, and endTime are required");
@@ -796,6 +1276,7 @@ async function createReservationFromPayload(payload: any, sessionUserID?: string
     const endTime = combineDateAndTime(reservationDate, payload.endTime);
 
     ensureThirtyMinuteSlotRange(startTime, endTime);
+    ensureReservationStartsInFuture(startTime);
 
     const conflictingReservations = await findConflictingReservations(
         lab.id,
@@ -810,7 +1291,8 @@ async function createReservationFromPayload(payload: any, sessionUserID?: string
     if (conflictingSeatNumbers.length > 0) {
         throw createHttpError(
             409,
-            `Seat(s) ${conflictingSeatNumbers.join(", ")} are already reserved for the selected time slot`
+            `Seat(s) ${conflictingSeatNumbers.join(", ")} are already reserved for the selected time slot`,
+            { conflictingSeatNumbers }
         );
     }
 
@@ -819,21 +1301,45 @@ async function createReservationFromPayload(payload: any, sessionUserID?: string
         : new Date();
 
     const newReservation = await Reservation.create({
-        user: userID,
+        user: reservationUser._id,
         lab: lab._id,
         seatNumbers,
-        isAnonymous: Boolean(payload.isAnonymous),
+        isAnonymous: normalizeBoolean(payload.isAnonymous, false),
         date: reservationDate,
         dateRequested,
         startTime,
         endTime,
-        status: payload.status === "cancelled" ? "cancelled" : "upcoming"
+        status: normalizeReservationStatus(payload.status, "upcoming") === "cancelled" ? "cancelled" : "upcoming"
     });
 
     await newReservation.populate("lab", "room");
     return newReservation;
 }
 
+
+async function createReservationActivities(reservation: any, action: "reserved" | "cancelled") {
+    const reservationObject = typeof reservation.toObject === "function"
+        ? reservation.toObject()
+        : reservation;
+
+    const seatNumbers = Array.isArray(reservationObject.seatNumbers) ? reservationObject.seatNumbers : [];
+    const labName = reservationObject.lab?.room ?? reservationObject.room ?? "";
+
+    if (seatNumbers.length === 0 || !labName) {
+        return;
+    }
+
+    await Promise.all(
+        seatNumbers.map((seatNumber: number) => Activity.create({
+            user: reservationObject.user,
+            reservation: reservationObject._id,
+            action,
+            seatNumber,
+            labName,
+            timestamp: new Date()
+        }))
+    );
+}
 function calculateReservationStatus(reservation: any) {
     if (reservation.status === "cancelled") {
         return "cancelled";
@@ -971,6 +1477,7 @@ app.get('/seat-reservation', async (_req, res) => {
 
 app.post('/seat-reservation', async (req: any, res) => {
     try {
+        const currentUser = await requireAuth(req);
         const { building, floor, room, date, startTime, endTime } = req.body;
 
         if (!building || !floor || !room || !date || !startTime || !endTime) {
@@ -989,7 +1496,8 @@ app.post('/seat-reservation', async (req: any, res) => {
             });
         }
 
-        const createdReservation = await createReservationFromPayload(req.body, req.session?.userID);
+        const createdReservation = await createReservationFromPayload(req.body, currentUser);
+        await createReservationActivities(createdReservation, "reserved");
 
         return res.status(201).json({
             message: "Reservation created",
@@ -1005,3 +1513,24 @@ app.post('/seat-reservation', async (req: any, res) => {
 
 
 
+
+app.get("/auth/me", async (request: any, response: any) => {
+    try {
+        const currentUser = await getCurrentUserFromSession(request);
+
+        if (!currentUser) {
+            return response.status(401).json({ message: "No active session" });
+        }
+
+        return response.json({
+            _id: currentUser._id,
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            email: currentUser.email,
+            role: currentUser.role,
+            description: currentUser.description ?? ""
+        });
+    } catch (error) {
+        return response.status(500).json({ message: (error as Error).message });
+    }
+});
