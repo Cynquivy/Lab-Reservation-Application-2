@@ -7,7 +7,7 @@ type Status = "UPCOMING" | "TODAY" | "PAST" | "CANCELLED";
 type ReservationWithStatus = ReservationDTO & { _status: Status };
 
 (function () {
-  const userID = ClientDBUtil.getCurrentUserID();
+  ClientDBUtil.validateSession();
 
   const els = {
     tbody: queryElement<HTMLTableSectionElement>("#reservations-tbody"),
@@ -232,7 +232,7 @@ type ReservationWithStatus = ReservationDTO & { _status: Status };
   }
 
   async function refreshReservations() {
-    reservations = await ClientDBUtil.getCurrentReservations(userID);
+    reservations = await ClientDBUtil.getCurrentReservations();
     render();
   }
 
@@ -444,7 +444,7 @@ type ReservationWithStatus = ReservationDTO & { _status: Status };
     const roleElement = document.getElementById("user-type");
 
     try {
-      const user = await ClientDBUtil.getCurrentUser(userID);
+      const user = await ClientDBUtil.getCurrentUser();
       if (nameElement) nameElement.textContent = user.firstName;
       if (roleElement) roleElement.textContent = user.role ?? "Student";
     } catch {

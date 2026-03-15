@@ -24,7 +24,10 @@ app.use(cors());
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,    
+    cookie: {
+        httpOnly: true
+    }
 }));
 
 app.post("/signup", async (request: any, response: any) => {
@@ -63,8 +66,8 @@ app.post("/signup", async (request: any, response: any) => {
 });
 
 
-app.post("/login", async (request: any, response: any) => {
-    const {email, password} = request.body;
+app.post("/login", async (request, response) => {
+    const {email, password, rememberMe} = request.body;
     try {
         const user = await User.findOne({email})
         if (!user) {
@@ -76,6 +79,13 @@ app.post("/login", async (request: any, response: any) => {
         }
 
         request.session.userID = user.id;
+        if (rememberMe) {
+            //TEST: This is for 10 seconds
+            request.session.cookie.maxAge = 1000 * 10;
+            // request.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //30 days
+        } else {
+            request.session.cookie.maxAge = undefined;
+        }
 
         return response.status(201).json({ message: "User found!", user: user._id});
     } catch (errorRecieved) {
@@ -88,15 +98,15 @@ app.post("/login", async (request: any, response: any) => {
     }
 })
 
-app.post('/logout', async (req: any, res) => {
-    try {
-        const destroySession = promisify(req.session.destroy.bind(req.session));
-        await destroySession();
+app.post('/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+        if (err) {
+            console.log(`destroy called: ${err}`)
+            return res.status(400).json({ message: err.message });
+        }
         res.clearCookie('connect.sid', { path: '/' });
-    }
-    catch (error) {
-        res.status(400).json({message: (error as any).message})
-    }
+        return res.json({ message: "Logged out" });
+    });
 })
 
 app.delete('/delete-account', async (req: any, res) => {
@@ -120,6 +130,15 @@ app.delete('/delete-account', async (req: any, res) => {
     catch (error) {
         res.status(400).json({message: (error as any).message})
     }
+})
+
+app.get(`/auth/check`, (request, response) => {
+    console.log("Session ID:", request.sessionID);
+    console.log("User ID in session:", request.session.userID);
+    if (request.session.userID)
+        return response.json({ loggedIn: true, userID: request.session.userID}); //USER ID FOR TESTING PURPOSES WILL BE REMOVED
+
+    return response.json({ loggedIn: false });
 })
 
 //ACTIVITY

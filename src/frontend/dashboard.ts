@@ -1,3 +1,4 @@
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
 const dateInput = queryElement("#current-date") as HTMLInputElement;
 
@@ -9,11 +10,11 @@ const dd = String(today.getDate()).padStart(2, '0');
 
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 
-const userID = sessionStorage.getItem("user");
 
 const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
 
 async function loadUserImg(){
+    const userID = await ClientDBUtil.validateSession();
     try{
         const res = await fetch(`http://localhost:3000/users/${userID}`);
 
@@ -56,10 +57,12 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
 
 document.addEventListener("DOMContentLoaded", async() => {
 
-    if(!userID){
-        window.location.href = "index.html";
-        return;
-    }
+    const userID = await ClientDBUtil.validateSession();
+    console.log(`user is signed in`);
+    // if(!userID){
+    //     window.location.href = "index.html";
+    //     return;
+    // }
 
     try{
         const userRes = await fetch(`http://localhost:3000/users/${userID}`);
