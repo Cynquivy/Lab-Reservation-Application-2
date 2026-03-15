@@ -139,7 +139,7 @@ function updateReservations(reservations: any[]){
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td colspan="5" style="text-align:right; padding-right: 1rem;">
-                <a href="my-reservations.html" class="view-more-reservations">View More</a>
+                <a href="my-reservations.html" class="view-more">View More</a>
             </td>
         `;
         upcomingTableBody.appendChild(tr);

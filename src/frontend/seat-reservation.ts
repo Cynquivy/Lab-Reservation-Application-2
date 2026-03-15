@@ -256,7 +256,7 @@ function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
 
         const userMarkup = occupiedSeat.isAnonymous || !occupiedSeat.user
             ? `<p>By: ${reserverName}</p>`
-            : `<p>By: <a href="other-profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
+            : `<p>By: <a href="profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
 
         return `
             <div class="seat-dropdown-chip">Reserved</div>

@@ -6,6 +6,30 @@ import type { ReservationDTO } from "../shared/modelTypes.d.ts";
 type Status = "UPCOMING" | "TODAY" | "PAST" | "CANCELLED";
 type ReservationWithStatus = ReservationDTO & { _status: Status };
 
+
+const userID = sessionStorage.getItem("user");
+
+const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
+
+async function loadUserImg(){
+    try{
+        const res = await fetch(`http://localhost:3000/users/${userID}`);
+
+        if(!res.ok){
+            throw new Error("Failed to load profile");
+        }
+
+        const user = await res.json();
+
+        if(profileImage) {
+            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        }
+
+    } catch(error){
+        console.error("Error loading profile: ", error);
+    }
+}
+
 (function () {
   const userID = ClientDBUtil.getCurrentUserID();
 
@@ -465,3 +489,5 @@ type ReservationWithStatus = ReservationDTO & { _status: Status };
     console.error("Failed to initialize My Reservations page", error);
   });
 })();
+
+loadUserImg();
