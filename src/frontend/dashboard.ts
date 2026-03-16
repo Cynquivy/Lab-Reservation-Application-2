@@ -239,4 +239,32 @@ function formatTime(dateInput: string | Date): string {
     return `${hh}:${min}`;
 }
 
+function generateTimeSlots() {
+    const select = document.querySelector("#timeslot-select") as HTMLSelectElement;
+
+    const startHour = 7;
+    const endHour = 20;
+
+    for (let h = startHour; h < endHour; h++) {
+
+        for (let m of [0, 30]) {
+
+            const start = new Date();
+            start.setHours(h, m, 0, 0);
+
+            const end = new Date(start);
+            end.setMinutes(start.getMinutes() + 30);
+
+            const option = document.createElement("option");
+            option.value = start.toISOString();
+            option.textContent =
+                `${formatTime(start)} - ${formatTime(end)}`;
+
+            select.appendChild(option);
+        }
+    }
+}
+
+generateTimeSlots();
+
 loadUserImg();

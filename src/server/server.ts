@@ -88,8 +88,8 @@ app.post("/login", async (request, response) => {
         request.session.userID = user.id;
         if (rememberMe) {
             //TEST: This is for 10 seconds
-            request.session.cookie.maxAge = 1000 * 10;
-            // request.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //30 days
+           // request.session.cookie.maxAge = 1000 * 10;
+            request.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //30 days
         } else {
             request.session.cookie.maxAge = undefined;
         }
@@ -291,6 +291,20 @@ app.get("/users", async (req, res) => {
     try{
         const id = (await requireAuth(req))._id;
         const user = await User.findById(id).select("-password");
+        
+        if(!user){
+            return res.status(400).json({message: "User not found"});
+        }
+
+        return res.json(user);
+    } catch(error){
+        return res.status(400).json({message: (error as any).message});
+    }
+});
+
+app.get("/users/:id", async (req, res) => {
+    try{
+        const user = await User.findById(req.params.id).select("-password");
         
         if(!user){
             return res.status(400).json({message: "User not found"});
