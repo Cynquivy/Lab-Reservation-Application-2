@@ -256,7 +256,14 @@ async function loadUserImg(){
   }
 
   async function refreshReservations() {
-    reservations = await ClientDBUtil.getCurrentReservations();
+    const user = await ClientDBUtil.getCurrentUser();
+
+    if (user.role === "Admin") {
+      reservations = await ClientDBUtil.getAllReservations();
+    } else {
+      reservations = await ClientDBUtil.getCurrentReservations();
+    }
+    
     render();
   }
 

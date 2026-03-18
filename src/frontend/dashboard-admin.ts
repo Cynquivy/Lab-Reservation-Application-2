@@ -74,6 +74,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error: ", e);
     }
 });
+
+let visibleReservationCount = 5;
 function updateReservations(reservations: any[]) {
     const upcomingTable = document.querySelector("#upcoming-reservations");
     const upcomingTableBody = upcomingTable?.querySelector("tbody");
@@ -84,34 +86,58 @@ function updateReservations(reservations: any[]) {
     if (!upcomingTable || !upcomingTableBody)
         return;
     upcomingTableBody.innerHTML = "";
-    if (reservations.length === 0) {
-        if (filler)
-            filler.innerHTML = "<h3>None</h3>";
-    }
+
     let count = 0;
+    let activeReservations = 0;
+
     const today = new Date();
-    reservations.forEach(r => {
-        const reservationDate = new Date(r.date);
-        const startTime = new Date(r.startTime);
-        const endTime = new Date(r.endTime);
-        if (reservationDate.toDateString() === today.toDateString())
-            count += 1;
-        const tr = document.createElement("tr");
-        tr.innerHTML =
-            `
-                <td>${r.lab.room}</td>
-                <td>${r.user.firstName} ${r.user.lastName}</td>
-                <td>${new Date(r.dateRequested).toLocaleString()}</td>
-                <td>${r.Date.toLocaleString()} · ${startTime.getHours()}:${startTime.getMinutes()}-${endTime.getHours()}:${endTime.getMinutes()}</td>
-                <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
-                <td class="${r.status === 'today' ? 'warning' : 'success'}">${r.status}</td>
-            `;
-        upcomingTable.appendChild(tr);
-    });
+
+    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
+    let showedReservations = sortedByDateReservations;
+
+    for (const r of showedReservations) {
+        if(r.status !== 'cancelled' && r.status !== 'past'){
+            const reservationDate = new Date(r.date);
+            activeReservations += 1;
+            if(reservationDate.toDateString() === today.toDateString()) 
+                count += 1;
+            
+            const tr = document.createElement("tr");
+            let status = capitalizeFirstLetter(r.status);
+            console.log(status);
+            if(activeReservations <= visibleReservationCount){
+                tr.innerHTML = `
+                    <td>${r.lab.room}</td>
+                    <td>${r.user.firstName} ${r.user.lastName}</td>
+                    <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
+                    <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
+                    <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
+                    <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
+                `;
+            }
+            upcomingTableBody.appendChild(tr);
+        }
+    };
+
+    if (activeReservations > visibleReservationCount) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="5" style="text-align:right; padding-right: 1rem;">
+                <a href="all-reservations.html" class="view-more">View More</a>
+            </td>
+        `;
+        upcomingTableBody.appendChild(tr);
+    }
+
+    if(activeReservations === 0){
+        if(filler) filler.innerHTML = "<h3>None</h3>"
+    }
+
     if (noUpcoming)
-        noUpcoming.textContent = String(count);
+        noUpcoming.textContent = String(activeReservations);
     if (noReservations){
-        noReservations.textContent = String(reservations.length)
+        noReservations.textContent = String(count);
     };
     if(noShowReservations){
         let noShow = 0;
@@ -121,7 +147,8 @@ function updateReservations(reservations: any[]) {
             if(r.status === 'past' && 
                rDate.getFullYear() === today.getFullYear() &&
                rDate.getMonth() === today.getMonth() &&
-               rDate.getDate() === today.getDate()){
+               rDate.getDate() === today.getDate() &&
+               r.date === new Date()){
                 noShow += 1;
             }
         });
@@ -185,5 +212,30 @@ function formatTimePassed(date: Date) {
         return `${days} day${days !== 1 ? "s" : ""} ago`;
     }
 }
+
+function capitalizeFirstLetter(string: string) {
+  if (!string || string.length === 0) { 
+    return "";
+  }
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatDate(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatTime(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${hh}:${min}`;
+}
+
+
 loadUserImg();
 //# sourceMappingURL=dashboard.js.map

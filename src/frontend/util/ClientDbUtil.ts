@@ -80,6 +80,17 @@ export namespace ClientDBUtil {
         return response.json() as Promise<ReservationDTO[]>;
     }
 
+    export async function getAllReservations() {
+        const res = await fetch("http://localhost:3000/reservations");
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch all reservations");
+        }
+
+        return res.json();
+    }
+
+
     /**
      * Gets reservation from id
      *

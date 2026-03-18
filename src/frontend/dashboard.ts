@@ -143,7 +143,7 @@ function updateReservations(reservations: any[]){
         upcomingTableBody.appendChild(tr);
     }
 
-    if(count === 0){
+    if(activeReservations === 0){
         if(filler) filler.innerHTML = "<h3>None</h3>"
     }
 

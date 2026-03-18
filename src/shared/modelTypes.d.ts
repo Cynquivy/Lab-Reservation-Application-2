@@ -43,7 +43,7 @@ export type User<TID = string, TDate = string> = {
     lastName: string;
     email: string;
     password: string;
-    role?: "Student" | "Lab Technician";
+    role?: "Student" | "Lab Technician" | "Admin";
     profileImage?: string;
     description?: string;
     isActive?: boolean;

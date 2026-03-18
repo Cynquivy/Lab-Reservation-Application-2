@@ -9,6 +9,14 @@ users select different buildings in the reservation form.
 ##########################################################################
 */
 
+const isAdmin = sessionStorage.getItem('role') === 'admin';
+
+const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]');
+
+if (isAdmin && dashboardLink) {
+    dashboardLink.setAttribute('href', 'dashboard-admin.html');
+}
+
 const GOKS_FLOORS = `
     <option value="3" selected> 3rd Floor </option>
     <option value="4"> 4th Floor </option>
