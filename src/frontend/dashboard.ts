@@ -80,14 +80,24 @@ document.addEventListener("DOMContentLoaded", async() => {
         const activityRes = await fetch(`http://localhost:3000/activities/user`);
         const activities = await activityRes.json();
 
-        updateReservations(reservations);
+        const labsRes = await fetch(`http://localhost:3000/alllabs`);
+        const labs = await labsRes.json();
 
+        updateReservations(reservations);
+        updateLabs(labs);
         visibleCount = 3;
         updateRecentActivity(activities);
     } catch (e){
         console.error("Error: ", e);
     }
 });
+
+function updateLabs(labs: any[]){
+    const numLabs = document.querySelector('#num-labs');
+    if(numLabs){
+        numLabs.textContent = String(labs.length);
+    }
+}
 
 
 let visibleReservationCount = 5;
@@ -183,7 +193,7 @@ function updateRecentActivity(activities: any[]){
         if(a.action === "cancelled"){
             text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
         } else{
-            text = `Reseved Seat ${a.seatNumber} in ${a.labName}`;
+            text = `Reserved Seat ${a.seatNumber} in ${a.labName}`;
         }
 
         li.innerHTML = `${text} <small>${timePassed}</small>`;

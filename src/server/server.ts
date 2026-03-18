@@ -1579,7 +1579,7 @@ app.post('/seat-reservation', async (req: any, res) => {
     }
 });
 
-app.get("/buildings", async (req: any, res: any) => {
+app.get("/buildings", async (_req: any, res: any) => {
     try{
         const buildings = await Building.find();
         return res.json(buildings);
@@ -1605,6 +1605,16 @@ app.get("/labs", async (req: any, res: any) => {
         return res.status(500).json({message: error});
     }
 });
+
+app.get("/alllabs", async (_req: any, res: any) => {
+    try{
+        const labs = await Lab.find();
+        return res.json(labs);
+    } catch(error){
+        return res.status(500).json({message: error});
+    }
+});
+
 
 app.post("/reservations/quick", async (req: any, res: any) => {
     const user = await requireAuth(req);

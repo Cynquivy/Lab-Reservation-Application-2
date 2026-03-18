@@ -150,7 +150,7 @@ function updateRecentActivity(activities){
         if(a.action === "cancelled"){
             text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
         } else{
-            text = `Reseved Seat ${a.seatNumber} in ${a.labName}`;
+            text = `Reserved Seat ${a.seatNumber} in ${a.labName}`;
         }
 
         li.innerHTML = `${text} <small>${timePassed}</small>`;
