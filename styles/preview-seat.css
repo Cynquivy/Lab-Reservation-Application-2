@@ -325,10 +325,18 @@ svg {
     transform: scale(1.1);
 }
 
+.seat.seat-reserved svg:hover{
+    transform: none;
+}
+
 .seat {
     position: relative;
     display: inline-block;
     cursor: pointer;    
+}
+
+.seat.seat-reserved {
+    cursor: default;
 }
 
 .seat-dropdown {
