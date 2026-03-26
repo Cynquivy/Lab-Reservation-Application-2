@@ -1,6 +1,6 @@
 import { queryElement } from "./util/frontendUtil.js";
 
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com/";
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
 
 const DIV = `
         <div class="overlay">
