@@ -13,6 +13,9 @@ import Building from './models/building.model';
 import { BUILDING_LABELS, LAB_SEAT_CONFIG, getLabsForBuildingFloor, normalizeBuildingCode, parseFloorNumber } from '../shared/labSeatConfig';
 import { promisify } from 'util';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express();
@@ -22,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
 app.use(session({
-    secret: 'keyboard cat',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,    
     cookie: {
@@ -691,17 +694,22 @@ app.get("/activities", async(_req, res) =>{
     }
 });
     
-mongoose.connect("mongodb+srv://marc:marcdb@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
-.then(() =>{
-    console.log("Connected to database!");
-    app.listen(3000, () => {
-        console.log('Server is running on port 3000');
-    });
-})
-.catch((err) =>{
-    console.error("Connection failed:", err.message);
-});
 
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+
+if(MONGO_URI){
+    mongoose.connect(MONGO_URI)
+    .then(() => {
+        console.log("Connected to database!");
+        app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error("Connection failed:", err.message);
+    });
+}
 
 function capitalizeFirstLetter(string: string) {
   if (!string || string.length === 0) { 
