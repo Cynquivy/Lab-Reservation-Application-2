@@ -1729,3 +1729,14 @@ app.get("/reservations/all", async (request: any, response) => {
         return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });
+
+app.patch("/reservations/cancel", async (req, res) => {
+  const { reservationIds } = req.body;
+
+  await Reservation.updateMany(
+    { _id: { $in: reservationIds } },
+    { $set: { status: "cancelled" } }
+  );
+
+  res.json({ message: "Cancelled" });
+});

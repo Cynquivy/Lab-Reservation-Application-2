@@ -4,15 +4,16 @@ import { queryElement } from "./util/frontendUtil.js";
 const userID = sessionStorage.getItem("user");
 const profileImage = document.querySelector('#user-pic');
 let isAdmin = false;
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
 async function loadUserImg() {
     try {
-        const res = await fetch(`http://localhost:3000/users/${userID}`);
+        const res = await fetch(`${BASE_URL}/users/${userID}`);
         if (!res.ok) {
             throw new Error("Failed to load profile");
         }
         const user = await res.json();
         if (profileImage) {
-            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+            profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
         }
     }
     catch (error) {
@@ -342,6 +343,9 @@ async function loadUserImg() {
                   <span class="material-symbols-outlined">edit</span>
                   Edit
                 </button>
+                <button class="action-btn danger" type="button" data-action="cancel" data-id="${reservation._id}">
+                  Cancel
+                </button>
               </div>
             </td>
           </tr>
@@ -354,6 +358,12 @@ async function loadUserImg() {
                 const action = button.getAttribute("data-action");
                 if (!id)
                     return;
+                if (action === "cancel") {
+                    if (confirm("Are you sure you want to cancel this reservation?")) {
+                        cancelReservations([id]);
+                    }
+                    return;
+                }
                 openModal(id, action === "edit" ? "edit" : "view");
             });
         });
@@ -432,6 +442,24 @@ async function loadUserImg() {
     init().catch((error) => {
         console.error("Failed to initialize My Reservations page", error);
     });
+    async function cancelReservations(ids) {
+        try {
+            const res = await fetch(`${BASE_URL}/reservations/cancel`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ reservationIds: ids }),
+            });
+            if (!res.ok) {
+                throw new Error("Failed to cancel reservations");
+            }
+            await refreshReservations();
+        }
+        catch (error) {
+            console.error("Cancel error:", error);
+        }
+    }
 })();
 loadUserImg();
 //# sourceMappingURL=my-reservations.js.map
