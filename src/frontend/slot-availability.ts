@@ -188,7 +188,7 @@ function renderAvailabilityTable(rooms) {
 
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === slot.startTime && entry.endTime === slot.endTime)
+            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === toUTCString(slot.startTime) && entry.endTime === toUTCString(slot.endTime))
                 ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
 
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
@@ -329,15 +329,9 @@ function formatHeadingDate(dateValue) {
 }
 
 function toUTCString(time) {
-    const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
-    if (!match) return null;
+    if (!time) return null;
 
-    let [_, hours, minutes, period] = match;
-    hours = Number(hours);
-    minutes = Number(minutes);
-
-    if (period.toUpperCase() === "PM" && hours !== 12) hours += 12;
-    if (period.toUpperCase() === "AM" && hours === 12) hours = 0;
+    let [hours, minutes] = time.split(":").map(Number);
 
     hours = (hours - 8 + 24) % 24;
 
