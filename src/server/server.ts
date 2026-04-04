@@ -1031,7 +1031,7 @@ function combineDateAndTime(dateValue: string | Date, timeValue: string | Date) 
         baseDate.getFullYear(),
         baseDate.getMonth(),
         baseDate.getDate(),
-        hours,
+        hours - 8,
         minutes,
         0,
         0
