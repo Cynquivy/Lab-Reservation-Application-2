@@ -152,7 +152,12 @@ function renderAvailabilityTable(rooms) {
     `;
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === formatHMM(slotTimeToUTC(currentDate, slot.startTime)) && entry.endTime === formatHMM(slotTimeToUTC(currentDate, slot.endTime))) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
+            const roomSlot = roomEntry.slots.find((entry) => {
+                const slotStartHMM = formatHMM(slotTimeToUTC(currentDate, slot.startTime));
+                const slotEndHMM = formatHMM(slotTimeToUTC(currentDate, slot.endTime));
+                console.log("Comparing slot:", `DB startTime: ${entry.startTime}, DB endTime: ${entry.endTime}`, `vs Formatted slot: ${slotStartHMM} - ${slotEndHMM}`);
+                return entry.startTime === slotStartHMM && entry.endTime === slotEndHMM;
+            }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${formatHMM(slotTimeToUTC(currentDate, slot.startTime))} and ${formatHMM(slotTimeToUTC(currentDate, slot.endTime))}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
             const query = new URLSearchParams({
