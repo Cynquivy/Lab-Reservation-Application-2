@@ -153,17 +153,8 @@ function renderAvailabilityTable(rooms) {
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
             const roomSlot = roomEntry.slots.find((entry) => {
-                const entryDate = new Date(entry.startTime);
-                const entryEndDate = new Date(entry.endTime);
-                const [slotStartHour, slotStartMin] = slot.startTime.split(":").map(Number);
-                const [slotEndHour, slotEndMin] = slot.endTime.split(":").map(Number);
-                const slotStartDate = new Date(currentDate);
-                slotStartDate.setHours(slotStartHour, slotStartMin, 0, 0);
-                const slotEndDate = new Date(currentDate);
-                slotEndDate.setHours(slotEndHour, slotEndMin, 0, 0);
-                console.log("Entry:", entryDate.toISOString(), "-", entryEndDate.toISOString());
-                console.log("Slot :", slotStartDate.toISOString(), "-", slotEndDate.toISOString());
-                return entryStart === slotStart && entryEnd === slotEnd;
+                console.log("Entry times (raw):", entry.startTime, entry.endTime);
+                return entry.startTime === slot.startTime && entry.endTime === slot.endTime;
             }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
