@@ -1018,7 +1018,16 @@ function combineDateAndTime(dateValue: string | Date, timeValue: string | Date) 
         throw createHttpError(400, "Invalid time format");
     }
 
-    return new Date(
+    // return new Date(
+    //     baseDate.getFullYear(),
+    //     baseDate.getMonth(),
+    //     baseDate.getDate(),
+    //     hours,
+    //     minutes,
+    //     0,
+    //     0
+    // );
+    return new Date(Date.UTC(
         baseDate.getFullYear(),
         baseDate.getMonth(),
         baseDate.getDate(),
@@ -1026,7 +1035,7 @@ function combineDateAndTime(dateValue: string | Date, timeValue: string | Date) 
         minutes,
         0,
         0
-    );
+    ));
 }
 
 function getDayRange(value: string | Date) {
