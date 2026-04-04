@@ -260,8 +260,8 @@ function formatDate(dateInput: string | Date): string {
 
 function formatTime(dateInput: string | Date): string {
     const date = new Date(dateInput);
-    const hh = String(date.getUTCHours()).padStart(2, '0');
-    const min = String(date.getUTCMinutes()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
     return `${hh}:${min}`;
 }
 
@@ -292,10 +292,10 @@ function generateTimeSlots() {
                 continue;
 
             const end = new Date(start);
-            end.setMinutes(start.getUTCMinutes() + 30);
+            end.setMinutes(start.getMinutes() + 30);
 
             const option = document.createElement("option");
-            option.value = start.toISOString();
+            option.value = start.getTime().toString();
             option.textContent =
                 `${formatTime(start)} - ${formatTime(end)}`;
 
@@ -399,7 +399,9 @@ reserveBtn?.addEventListener("click", async () => {
 
     const startTime = new Date(time);
     const endTime = new Date(startTime);
-    endTime.setMinutes(startTime.getUTCMinutes() + 30);
+    endTime.setMinutes(startTime.getMinutes() + 30);
+
+    console.log("Reserving lab:", { startTime, endTime });
 
     const reservation = {
         lab: labId,
