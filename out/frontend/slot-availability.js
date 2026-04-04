@@ -152,10 +152,7 @@ function renderAvailabilityTable(rooms) {
     `;
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => {
-                console.log("Entry times (raw):", entry.startTime, entry.endTime);
-                return entry.startTime === utcToLocal(slot.startTime) && entry.endTime === utcToLocal(slot.endTime);
-            }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
+            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === slotTimeToUTC(currentDate, slot.startTime) && entry.endTime === slotTimeToUTC(currentDate, slot.endTime)) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
             const query = new URLSearchParams({
@@ -271,13 +268,10 @@ function formatHeadingDate(dateValue) {
         day: "numeric"
     });
 }
-function utcToLocal(isoString) {
-    if (!isoString)
-        return null;
-    const date = new Date(isoString);
-    let hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
-    hours = (hours + 8) % 24;
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+function slotTimeToUTC(date, slotTime) {
+    const [hour, minute] = slotTime.split(":").map(Number);
+    const dt = new Date(date);
+    dt.setHours(hour, minute, 0, 0);
+    return dt.toISOString();
 }
 //# sourceMappingURL=slot-availability.js.map
