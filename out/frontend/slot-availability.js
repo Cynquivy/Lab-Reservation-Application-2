@@ -154,7 +154,7 @@ function renderAvailabilityTable(rooms) {
         const slotCells = slotDefinitions.map((slot) => {
             const roomSlot = roomEntry.slots.find((entry) => {
                 console.log("Entry times (raw):", entry.startTime, entry.endTime);
-                return entry.startTime === slot.startTime && entry.endTime === slot.endTime;
+                return entry.startTime === utcToLocal(slot.startTime) && entry.endTime === utcToLocal(slot.endTime);
             }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
