@@ -980,7 +980,12 @@ function parseDateOnly(value: string | Date) {
     }
 
     const parsedDate = parseFlexibleDate(value, "date");
-    return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
+    // return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
+    return new Date(Date.UTC(
+        parsedDate.getFullYear(),
+        parsedDate.getMonth(),
+        parsedDate.getDate()
+    ));
 }
 
 function combineDateAndTime(dateValue: string | Date, timeValue: string | Date) {
