@@ -160,8 +160,8 @@ function renderAvailabilityTable(rooms) {
                 floor: String(floor),
                 room: roomEntry.room,
                 date: formatDateInputValue(currentDate),
-                startTime: slot.startTime,
-                endTime: slot.endTime
+                startTime: toUTCString(slot.startTime),
+                endTime: toUTCString(slot.endTime)
             });
             return `
                 <td class="room-data" style="background-color:${cellInfo.background};">
@@ -267,5 +267,19 @@ function formatHeadingDate(dateValue) {
         month: "short",
         day: "numeric"
     });
+}
+function toUTCString(time) {
+    const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!match)
+        return null;
+    let [_, hours, minutes, period] = match;
+    hours = Number(hours);
+    minutes = Number(minutes);
+    if (period.toUpperCase() === "PM" && hours !== 12)
+        hours += 12;
+    if (period.toUpperCase() === "AM" && hours === 12)
+        hours = 0;
+    hours = (hours - 8 + 24) % 24;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 //# sourceMappingURL=slot-availability.js.map
