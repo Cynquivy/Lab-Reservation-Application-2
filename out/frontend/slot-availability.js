@@ -152,13 +152,8 @@ function renderAvailabilityTable(rooms) {
     `;
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => {
-                const slotStartHMM = formatHMM(slotTimeToUTC(currentDate, slot.startTime));
-                const slotEndHMM = formatHMM(slotTimeToUTC(currentDate, slot.endTime));
-                console.log("Comparing slot:", `DB startTime: ${entry.startTime}, DB endTime: ${entry.endTime}`, `vs Formatted slot: ${slotStartHMM} - ${slotEndHMM}`);
-                return entry.startTime === slotStartHMM && entry.endTime === slotEndHMM;
-            }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
-            console.log(`Rendering slot: ${formatHMM(slotTimeToUTC(currentDate, slot.startTime))} and ${formatHMM(slotTimeToUTC(currentDate, slot.endTime))}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
+            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === slot.startTime && entry.endTime === slot.endTime)
+                ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
             const query = new URLSearchParams({
                 building: buildingCode,
@@ -223,7 +218,7 @@ function getCellPresentation(slot, capacity) {
 }
 function buildSlotDefinitions(dateValue) {
     const slots = [];
-    for (let hour = 0; hour < 10; hour += 1) {
+    for (let hour = 8; hour < 18; hour += 1) {
         for (const minute of [0, 30]) {
             const startTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
             const displayDate = new Date(`${dateValue}T${startTime}:00`);
@@ -272,17 +267,5 @@ function formatHeadingDate(dateValue) {
         month: "short",
         day: "numeric"
     });
-}
-function slotTimeToUTC(date, slotTime) {
-    const [hour, minute] = slotTime.split(":").map(Number);
-    const dt = new Date(date);
-    dt.setHours(hour, minute, 0, 0);
-    return dt.toISOString();
-}
-function formatHMM(date) {
-    const dt = new Date(date);
-    const h = dt.getUTCHours();
-    const m = dt.getUTCMinutes();
-    return `${h}:${m.toString().padStart(2, "0")}`;
 }
 //# sourceMappingURL=slot-availability.js.map
