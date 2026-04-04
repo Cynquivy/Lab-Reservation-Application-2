@@ -275,9 +275,9 @@ function slotTimeToUTC(date, slotTime) {
     return dt.toISOString();
 }
 function formatHMM(date) {
-    const date = new Date(isoString);
-    const h = date.getHours();
-    const m = date.getMinutes();
+    const dt = new Date(isoString);
+    const h = dt.getHours();
+    const m = dt.getMinutes();
     return `${h}:${m.toString().padStart(2, "0")}`;
 }
 //# sourceMappingURL=slot-availability.js.map
