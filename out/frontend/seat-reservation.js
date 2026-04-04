@@ -103,8 +103,8 @@ async function refreshSeatMap() {
         const query = new URLSearchParams({
             room,
             date,
-            startTime,
-            endTime
+            startTime: toUTCString(startTime),
+            endTime: toUTCString(endTime)
         });
         const response = await fetch(`/reservations/occupied?${query.toString()}`);
         const data = await response.json();
@@ -265,8 +265,8 @@ async function submitReservation() {
                 floor,
                 room,
                 date,
-                startTime,
-                endTime,
+                startTime: toUTCString(startTime),
+                endTime: toUTCString(endTime),
                 seatNumbers: Array.from(selectedSeats).sort((left, right) => left - right),
                 isAnonymous: isAnonymousReservation
             })
@@ -363,5 +363,19 @@ function formatDateHeading(dateValue) {
 }
 function formatTimeRange(startValue, endValue) {
     return `${normalizeTimeParam(startValue) ?? startValue} to ${normalizeTimeParam(endValue) ?? endValue}`;
+}
+function toUTCString(time) {
+    const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!match)
+        return null;
+    let [_, hours, minutes, period] = match;
+    hours = Number(hours);
+    minutes = Number(minutes);
+    if (period.toUpperCase() === "PM" && hours !== 12)
+        hours += 12;
+    if (period.toUpperCase() === "AM" && hours === 12)
+        hours = 0;
+    hours = (hours - 8 + 24) % 24;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 //# sourceMappingURL=seat-reservation.js.map
