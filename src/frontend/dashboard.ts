@@ -295,7 +295,7 @@ function generateTimeSlots() {
             end.setMinutes(start.getMinutes() + 30);
 
             const option = document.createElement("option");
-            option.value = start.toISOString();
+            option.value = start.toString();
             option.textContent =
                 `${formatTime(start)} - ${formatTime(end)}`;
 
