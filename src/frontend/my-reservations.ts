@@ -102,7 +102,7 @@ async function loadUserImg(){
     const parsed = new Date(value);
 
     if (!Number.isNaN(parsed.getTime())) {
-      return parsed.getHours() * 60 + parsed.getMinutes();
+      return parsed.getUTCHours() * 60 + parsed.getUTCMinutes();
     }
 
     if (/^\d{1,2}:\d{2}$/.test(value)) {
