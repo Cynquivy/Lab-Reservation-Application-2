@@ -78,7 +78,7 @@ async function loadUserImg() {
     function minutesFromTimeValue(value) {
         const parsed = new Date(value);
         if (!Number.isNaN(parsed.getTime())) {
-            return parsed.getUTCHours() * 60 + parsed.getUTCMinutes();
+            return parsed.getHours() * 60 + parsed.getMinutes();
         }
         if (/^\d{1,2}:\d{2}$/.test(value)) {
             const parts = value.split(":");
