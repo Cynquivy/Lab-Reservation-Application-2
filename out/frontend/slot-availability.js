@@ -153,11 +153,16 @@ function renderAvailabilityTable(rooms) {
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
             const roomSlot = roomEntry.slots.find((entry) => {
-                const entryStart = new Date(entry.startTime).getTime();
-                const entryEnd = new Date(entry.endTime).getTime();
-                const slotStart = new Date(`${formatDateInputValue(currentDate)}T${slot.startTime}:00Z`).getTime();
-                const slotEnd = new Date(`${formatDateInputValue(currentDate)}T${slot.endTime}:00Z`).getTime();
-                console.log("Entry UTC:", entryStart, entryEnd, "Slot UTC:", slotStart, slotEnd);
+                const entryDate = new Date(entry.startTime);
+                const entryEndDate = new Date(entry.endTime);
+                const [slotStartHour, slotStartMin] = slot.startTime.split(":").map(Number);
+                const [slotEndHour, slotEndMin] = slot.endTime.split(":").map(Number);
+                const slotStartDate = new Date(currentDate);
+                slotStartDate.setHours(slotStartHour, slotStartMin, 0, 0);
+                const slotEndDate = new Date(currentDate);
+                slotEndDate.setHours(slotEndHour, slotEndMin, 0, 0);
+                console.log("Entry:", entryDate.toISOString(), "-", entryEndDate.toISOString());
+                console.log("Slot :", slotStartDate.toISOString(), "-", slotEndDate.toISOString());
                 return entryStart === slotStart && entryEnd === slotEnd;
             }) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
