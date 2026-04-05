@@ -103,17 +103,32 @@ async function loadUserImg() {
   }
 
   function minutesFromTimeValue(value: string) {
-    const parsed = new Date(value);
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      throw new Error("Invalid time format");
+    }
+
+    const hhmmMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+
+    if (hhmmMatch) {
+      const hoursText = hhmmMatch[1];
+      const minutesText = hhmmMatch[2];
+
+      if (hoursText === undefined || minutesText === undefined) {
+        throw new Error("Invalid time format");
+      }
+
+      const hours = Number(hoursText);
+      const minutes = Number(minutesText);
+
+      return hours * 60 + minutes;
+    }
+
+    const parsed = new Date(trimmed);
 
     if (!Number.isNaN(parsed.getTime())) {
       return parsed.getHours() * 60 + parsed.getMinutes();
-    }
-
-    if (/^\d{1,2}:\d{2}$/.test(value)) {
-      const parts = value.split(":");
-      const hours = Number(parts[0]);
-      const minutes = Number(parts[1]);
-      return hours * 60 + minutes;
     }
 
     throw new Error("Invalid time format");
@@ -125,9 +140,32 @@ async function loadUserImg() {
     return `${pad2(h)}:${pad2(m)}`;
   }
 
-  function toTimeInputValue(dateOrTime: string | Date) {
-    const mins = minutesFromTimeValue(String(dateOrTime));
-    return hhmmFromMinutes(mins);
+  function timeValueFromReservation(dateValue: string | Date, dateTimeValue: string | Date) {
+    const reservationDate = new Date(dateValue);
+    const reservationDateTime = new Date(dateTimeValue);
+
+    if (!Number.isNaN(reservationDate.getTime()) && !Number.isNaN(reservationDateTime.getTime())) {
+      const minutes = Math.round((reservationDateTime.getTime() - reservationDate.getTime()) / 60000);
+
+      if (minutes >= 0 && minutes <= 24 * 60) {
+        return hhmmFromMinutes(minutes);
+      }
+    }
+
+    return hhmmFromMinutes(minutesFromTimeValue(String(dateTimeValue)));
+  }
+
+  function setSelectValue(selectEl: HTMLSelectElement, value: string) {
+    const hasOption = Array.from(selectEl.options).some((option) => option.value === value);
+
+    if (!hasOption && value) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      selectEl.appendChild(option);
+    }
+
+    selectEl.value = value;
   }
 
   function statusFor(res: ReservationDTO): Status {
@@ -261,6 +299,9 @@ async function loadUserImg() {
     const status = statusFor(reservation);
     const seatNumbers = getSeatNumbers(reservation);
 
+    const startValue = timeValueFromReservation(reservation.date, reservation.startTime);
+    const endValue = timeValueFromReservation(reservation.date, reservation.endTime);
+
     const viewItems = [
       { label: "Reservation ID", value: reservation._id },
       { label: "Laboratory", value: reservation.lab.room },
@@ -271,7 +312,7 @@ async function loadUserImg() {
       { label: "Date", value: formatDateLabel(toISODate(reservation.date)) },
       {
         label: "Time",
-        value: `${toTimeInputValue(reservation.startTime)} - ${toTimeInputValue(reservation.endTime)}`,
+        value: `${startValue} - ${endValue}`,
       },
       { label: "Seats", value: seatNumbers.length > 0 ? seatNumbers.join(", ") : "N/A" },
       { label: "Visibility", value: visibilityLabel(reservation) },
@@ -287,8 +328,10 @@ async function loadUserImg() {
     els.editDate.value = formatLockedDate(reservation.date);
     els.editSeatInput.value = "";
     setDraftSeatNumbers(seatNumbers);
-    els.editStart.value = toTimeInputValue(reservation.startTime);
-    els.editEnd.value = toTimeInputValue(reservation.endTime);
+
+    setSelectValue(els.editStart, startValue);
+    setSelectValue(els.editEnd, endValue);
+
     els.editAnon.checked = Boolean(reservation.isAnonymous);
 
     syncEndTimes();
@@ -314,8 +357,10 @@ async function loadUserImg() {
   }
 
   function syncEndTimes() {
+    if (!els.editStart.value) return;
+
     const start = minutesFromTimeValue(els.editStart.value);
-    const end = minutesFromTimeValue(els.editEnd.value);
+    const end = els.editEnd.value ? minutesFromTimeValue(els.editEnd.value) : -1;
 
     const options = Array.from(els.editEnd.options);
     options.forEach((option) => {
@@ -323,7 +368,7 @@ async function loadUserImg() {
       option.disabled = optionMinutes <= start;
     });
 
-    if (end <= start) {
+    if (end <= start || !els.editEnd.value) {
       const firstValid = options.find((option) => !option.disabled);
       if (firstValid) {
         els.editEnd.value = firstValid.value;
@@ -471,7 +516,7 @@ async function loadUserImg() {
             <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
-            <td>${toTimeInputValue(reservation.startTime)} - ${toTimeInputValue(reservation.endTime)}</td>
+            <td>${timeValueFromReservation(reservation.date, reservation.startTime)} - ${timeValueFromReservation(reservation.date, reservation.endTime)}</td>
             <td>Seat${seats.length > 1 ? "s" : ""} ${seats.join(", ")}</td>
             <td>${visibilityLabel(reservation)}</td>
             <td>
