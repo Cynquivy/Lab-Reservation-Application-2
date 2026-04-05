@@ -72,7 +72,6 @@ async function loadUserImg(){
     editStart: queryElement<HTMLSelectElement>("#edit-start"),
     editEnd: queryElement<HTMLSelectElement>("#edit-end"),
     editAnon: queryElement<HTMLInputElement>("#edit-anon"),
-    editAnonToggle: queryElement<HTMLButtonElement>("#edit-anon-toggle"),
     seatHint: queryElement<HTMLElement>("#seat-hint"),
   };
 
@@ -269,12 +268,6 @@ async function loadUserImg(){
   function showError(message: string) {
     els.formError.textContent = message;
     setHidden(els.formError, false);
-  }
-
-  function syncAnonToggleUI() {
-    const checked = Boolean(els.editAnon.checked);
-    els.editAnonToggle.classList.toggle("is-on", checked);
-    els.editAnonToggle.setAttribute("aria-checked", checked ? "true" : "false");
   }
 
   async function refreshReservations() {
@@ -523,29 +516,6 @@ async function loadUserImg(){
 
     els.editForm.addEventListener("submit", validateAndSaveEdit);
     els.editStart.addEventListener("change", syncEndTimes);
-    els.editAnonToggle.addEventListener("click", () => {
-      els.editAnon.checked = !els.editAnon.checked;
-      syncAnonToggleUI();
-    });
-
-    els.editDate.addEventListener("change", () => {
-      if (els.editDate.disabled) {
-        return;
-      }
-      const selectedDate = els.editDate.value;
-      const selectedStartTime = els.editStart.value;
-
-      if (!selectedDate || !selectedStartTime) {
-        return;
-      }
-
-      const proposedStart = new Date(`${selectedDate}T${selectedStartTime}:00`);
-      if (proposedStart.getTime() <= Date.now()) {
-        showError("Start date/time must be in the future.");
-      } else {
-        setHidden(els.formError, true);
-      }
-    });
 
     els.editDate.addEventListener("change", () => {
       const selectedDate = els.editDate.value;
@@ -590,7 +560,6 @@ async function loadUserImg(){
     bindEvents();
 
     await Promise.all([hydrateProfileHeader(), refreshReservations()]);
-    syncAnonToggleUI();
   }
 
   init().catch((error) => {

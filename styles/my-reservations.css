@@ -368,42 +368,9 @@ body.modal-open {
     grid-column: 1 / -1;
 }
 
-.form-field-inline label {
-    margin: 0;
-    cursor: pointer;
-}
-
-.anon-toggle {
-    position: relative;
-    width: 2.4rem;
-    height: 1.45rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.16);
-    background: rgba(255,255,255,0.12);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.anon-toggle::after {
-    content: "";
-    position: absolute;
-    top: 0.12rem;
-    left: 0.12rem;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background: #d2d6f3;
-    transition: transform 0.2s ease;
-}
-
-.anon-toggle.is-on {
-    background: rgba(55, 203, 167, 0.35);
-    border-color: rgba(55, 203, 167, 0.9);
-}
-
-.anon-toggle.is-on::after {
-    transform: translateX(0.9rem);
-    background: #ffffff;
+.form-field-inline input {
+    width: auto;
+    transform: scale(1.1);
 }
 
 .form-error {

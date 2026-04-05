@@ -53,7 +53,6 @@ async function loadUserImg() {
         editStart: queryElement("#edit-start"),
         editEnd: queryElement("#edit-end"),
         editAnon: queryElement("#edit-anon"),
-        editAnonToggle: queryElement("#edit-anon-toggle"),
         seatHint: queryElement("#seat-hint"),
     };
     let reservations = [];
@@ -227,11 +226,6 @@ async function loadUserImg() {
     function showError(message) {
         els.formError.textContent = message;
         setHidden(els.formError, false);
-    }
-    function syncAnonToggleUI() {
-        const checked = Boolean(els.editAnon.checked);
-        els.editAnonToggle.classList.toggle("is-on", checked);
-        els.editAnonToggle.setAttribute("aria-checked", checked ? "true" : "false");
     }
     async function refreshReservations() {
         const user = await ClientDBUtil.getCurrentUser();
@@ -477,7 +471,6 @@ async function loadUserImg() {
         populateLabSelections();
         bindEvents();
         await Promise.all([hydrateProfileHeader(), refreshReservations()]);
-        syncAnonToggleUI();
     }
     init().catch((error) => {
         console.error("Failed to initialize My Reservations page", error);
