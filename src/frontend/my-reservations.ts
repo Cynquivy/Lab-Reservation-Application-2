@@ -221,12 +221,10 @@ async function loadUserImg(){
     els.editId.value = reservation._id;
     els.editLab.value = reservation.lab.room;
     els.editDate.value = toISODate(reservation.date);
-    els.editDate.disabled = !isAdmin;
     els.editSeat.value = seatNumbers.join(", ");
     els.editStart.value = toTimeInputValue(reservation.startTime);
     els.editEnd.value = toTimeInputValue(reservation.endTime);
     els.editAnon.checked = Boolean(reservation.isAnonymous);
-    syncAnonToggleUI();
     els.seatHint.textContent = `Edit one or more seats for this reservation in ${reservation.lab.room}.`;
 
     syncEndTimes();
@@ -534,6 +532,22 @@ async function loadUserImg(){
       if (els.editDate.disabled) {
         return;
       }
+      const selectedDate = els.editDate.value;
+      const selectedStartTime = els.editStart.value;
+
+      if (!selectedDate || !selectedStartTime) {
+        return;
+      }
+
+      const proposedStart = new Date(`${selectedDate}T${selectedStartTime}:00`);
+      if (proposedStart.getTime() <= Date.now()) {
+        showError("Start date/time must be in the future.");
+      } else {
+        setHidden(els.formError, true);
+      }
+    });
+
+    els.editDate.addEventListener("change", () => {
       const selectedDate = els.editDate.value;
       const selectedStartTime = els.editStart.value;
 

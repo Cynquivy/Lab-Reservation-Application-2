@@ -188,12 +188,10 @@ async function loadUserImg() {
         els.editId.value = reservation._id;
         els.editLab.value = reservation.lab.room;
         els.editDate.value = toISODate(reservation.date);
-        els.editDate.disabled = !isAdmin;
         els.editSeat.value = seatNumbers.join(", ");
         els.editStart.value = toTimeInputValue(reservation.startTime);
         els.editEnd.value = toTimeInputValue(reservation.endTime);
         els.editAnon.checked = Boolean(reservation.isAnonymous);
-        syncAnonToggleUI();
         els.seatHint.textContent = `Edit one or more seats for this reservation in ${reservation.lab.room}.`;
         syncEndTimes();
         setHidden(els.overlay, false);
@@ -439,14 +437,7 @@ async function loadUserImg() {
         els.tabEdit.addEventListener("click", () => setTab("edit"));
         els.editForm.addEventListener("submit", validateAndSaveEdit);
         els.editStart.addEventListener("change", syncEndTimes);
-        els.editAnonToggle.addEventListener("click", () => {
-            els.editAnon.checked = !els.editAnon.checked;
-            syncAnonToggleUI();
-        });
         els.editDate.addEventListener("change", () => {
-            if (els.editDate.disabled) {
-                return;
-            }
             const selectedDate = els.editDate.value;
             const selectedStartTime = els.editStart.value;
             if (!selectedDate || !selectedStartTime) {
