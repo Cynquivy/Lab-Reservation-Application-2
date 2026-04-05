@@ -53,6 +53,7 @@ async function loadUserImg() {
         editStart: queryElement("#edit-start"),
         editEnd: queryElement("#edit-end"),
         editAnon: queryElement("#edit-anon"),
+        editAnonToggle: queryElement("#edit-anon-toggle"),
         seatHint: queryElement("#seat-hint"),
     };
     let reservations = [];
@@ -96,6 +97,14 @@ async function loadUserImg() {
     function toTimeInputValue(dateOrTime) {
         const mins = minutesFromTimeValue(String(dateOrTime));
         return hhmmFromMinutes(mins);
+    }
+    function parseSeatNumbersInput(rawSeatInput) {
+        const parsedSeatNumbers = rawSeatInput
+            .split(",")
+            .map((seat) => Number(seat.trim()))
+            .filter((seat) => Number.isFinite(seat));
+        const uniqueSeatNumbers = Array.from(new Set(parsedSeatNumbers));
+        return uniqueSeatNumbers;
     }
     function statusFor(res) {
         const status = (res.status ?? "upcoming").toString().toLowerCase();
@@ -179,11 +188,13 @@ async function loadUserImg() {
         els.editId.value = reservation._id;
         els.editLab.value = reservation.lab.room;
         els.editDate.value = toISODate(reservation.date);
-        els.editSeat.value = String(seatNumbers[0] ?? "");
+        els.editDate.disabled = !isAdmin;
+        els.editSeat.value = seatNumbers.join(", ");
         els.editStart.value = toTimeInputValue(reservation.startTime);
         els.editEnd.value = toTimeInputValue(reservation.endTime);
         els.editAnon.checked = Boolean(reservation.isAnonymous);
-        els.seatHint.textContent = `You can edit one seat number for this reservation.`;
+        syncAnonToggleUI();
+        els.seatHint.textContent = `Edit one or more seats for this reservation in ${reservation.lab.room}.`;
         syncEndTimes();
         setHidden(els.overlay, false);
         els.overlay.classList.add("is-open");
@@ -219,6 +230,11 @@ async function loadUserImg() {
         els.formError.textContent = message;
         setHidden(els.formError, false);
     }
+    function syncAnonToggleUI() {
+        const checked = Boolean(els.editAnon.checked);
+        els.editAnonToggle.classList.toggle("is-on", checked);
+        els.editAnonToggle.setAttribute("aria-checked", checked ? "true" : "false");
+    }
     async function refreshReservations() {
         const user = await ClientDBUtil.getCurrentUser();
         if (user.role === "Admin") {
@@ -239,21 +255,31 @@ async function loadUserImg() {
         if (!existing)
             return;
         const date = els.editDate.value;
-        const seat = Number(els.editSeat.value);
+        const seatNumbers = parseSeatNumbersInput(els.editSeat.value);
         const startTime = els.editStart.value;
         const endTime = els.editEnd.value;
-        if (!date || !startTime || !endTime || !Number.isFinite(seat)) {
+        if (!date || !startTime || !endTime) {
             return showError("Please complete all required fields.");
+        }
+        if (seatNumbers.length === 0) {
+            return showError("At least one seat is required. Use cancel if you want to remove the reservation.");
+        }
+        if (seatNumbers.some((seatNumber) => !Number.isInteger(seatNumber) || seatNumber <= 0)) {
+            return showError("Seats must be positive whole numbers separated by commas (e.g., 2, 3, 5).");
         }
         if (minutesFromTimeValue(endTime) <= minutesFromTimeValue(startTime)) {
             return showError("End time must be after start time.");
+        }
+        const proposedStart = new Date(`${date}T${startTime}:00`);
+        if (Number.isNaN(proposedStart.getTime()) || proposedStart.getTime() <= Date.now()) {
+            return showError("Start date/time must be in the future.");
         }
         try {
             await ClientDBUtil.updateReservation(id, {
                 date,
                 startTime,
                 endTime,
-                seatNumbers: [seat],
+                seatNumbers,
                 isAnonymous: els.editAnon.checked,
             });
             await refreshReservations();
@@ -413,6 +439,27 @@ async function loadUserImg() {
         els.tabEdit.addEventListener("click", () => setTab("edit"));
         els.editForm.addEventListener("submit", validateAndSaveEdit);
         els.editStart.addEventListener("change", syncEndTimes);
+        els.editAnonToggle.addEventListener("click", () => {
+            els.editAnon.checked = !els.editAnon.checked;
+            syncAnonToggleUI();
+        });
+        els.editDate.addEventListener("change", () => {
+            if (els.editDate.disabled) {
+                return;
+            }
+            const selectedDate = els.editDate.value;
+            const selectedStartTime = els.editStart.value;
+            if (!selectedDate || !selectedStartTime) {
+                return;
+            }
+            const proposedStart = new Date(`${selectedDate}T${selectedStartTime}:00`);
+            if (proposedStart.getTime() <= Date.now()) {
+                showError("Start date/time must be in the future.");
+            }
+            else {
+                setHidden(els.formError, true);
+            }
+        });
         els.editLab.addEventListener("change", () => {
             const lab = els.editLab.value;
             els.seatHint.textContent = `Editing reservation in ${lab}.`;
@@ -435,9 +482,11 @@ async function loadUserImg() {
     async function init() {
         buildTimeOptions(els.editStart);
         buildTimeOptions(els.editEnd);
+        els.editDate.min = toISODate(new Date());
         populateLabSelections();
         bindEvents();
         await Promise.all([hydrateProfileHeader(), refreshReservations()]);
+        syncAnonToggleUI();
     }
     init().catch((error) => {
         console.error("Failed to initialize My Reservations page", error);
