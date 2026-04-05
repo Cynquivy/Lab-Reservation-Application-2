@@ -234,6 +234,14 @@
           </div>
 
           <form id="edit-form" hidden>
+            <div class="edit-guidance">
+              <span class="material-symbols-outlined">info</span>
+              <div>
+                <b>Edit rules</b>
+                <p>Update one or more seats, adjust date/time to a future slot, and toggle anonymous visibility. Lab room is fixed for this reservation.</p>
+              </div>
+            </div>
+
             <div class="form-grid">
               <div class="form-field">
                 <label>Reservation ID</label>
@@ -253,12 +261,13 @@
               <div class="form-field">
                 <label for="edit-date">Date</label>
                 <input id="edit-date" type="date" required>
+                <small class="text-muted">Start date/time must be in the future.</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-seat">Seat</label>
-                <input id="edit-seat" type="number" min="1" step="1" required>
-                <small class="text-muted" id="seat-hint">Seat must be within lab capacity.</small>
+                <label for="edit-seat">Seats</label>
+                <input id="edit-seat" type="text" inputmode="numeric" placeholder="e.g., 2, 3, 5" required>
+                <small class="text-muted" id="seat-hint">Enter one or more seat numbers separated by commas. At least one seat is required.</small>
               </div>
 
               <div class="form-field">

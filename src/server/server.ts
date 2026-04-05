@@ -344,6 +344,12 @@ app.put("/reservations/:id", async (request: any, response) => {
             return response.status(403).json({ message: "You are not allowed to edit this reservation" });
         }
 
+        if (request.body.lab !== undefined && getDocumentId(request.body.lab) !== getDocumentId(existingReservation.lab)) {
+            return response.status(400).json({
+                message: "Lab room cannot be changed while editing. Cancel and create a new reservation for another lab."
+            });
+        }
+
         const nextLab = await resolveLabFromPayload({
             ...request.body,
             lab: request.body.lab ?? existingReservation.lab.toString()
