@@ -3,7 +3,7 @@ import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
 const userID = sessionStorage.getItem("user");
 const profileImage = document.querySelector("#user-pic");
-let isAdmin = false;
+let isManager = false;
 async function loadUserImg() {
     try {
         const res = await fetch(`/users/${userID}`);
@@ -47,11 +47,10 @@ async function loadUserImg() {
         editId: queryElement("#edit-id"),
         editLab: queryElement("#edit-lab"),
         editDate: queryElement("#edit-date"),
+        editTime: queryElement("#edit-time"),
         editSeatInput: queryElement("#edit-seat-input"),
         addSeatBtn: queryElement("#add-seat-btn"),
         editSeatList: queryElement("#edit-seat-list"),
-        editStart: queryElement("#edit-start"),
-        editEnd: queryElement("#edit-end"),
         editAnon: queryElement("#edit-anon"),
         seatHint: queryElement("#seat-hint"),
     };
@@ -81,34 +80,7 @@ async function loadUserImg() {
         const [year, month, day] = isoDate.split("-");
         return `${month}/${day}/${year}`;
     }
-    function minutesFromTimeValue(value) {
-        const trimmed = value.trim();
-        if (!trimmed) {
-            throw new Error("Invalid time format");
-        }
-        const hhmmMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
-        if (hhmmMatch) {
-            const hoursText = hhmmMatch[1];
-            const minutesText = hhmmMatch[2];
-            if (hoursText === undefined || minutesText === undefined) {
-                throw new Error("Invalid time format");
-            }
-            const hours = Number(hoursText);
-            const minutes = Number(minutesText);
-            return hours * 60 + minutes;
-        }
-        const parsed = new Date(trimmed);
-        if (!Number.isNaN(parsed.getTime())) {
-            return parsed.getHours() * 60 + parsed.getMinutes();
-        }
-        throw new Error("Invalid time format");
-    }
-    function hhmmFromMinutes(mins) {
-        const h = Math.floor(mins / 60);
-        const m = mins % 60;
-        return `${pad2(h)}:${pad2(m)}`;
-    }
-    function timeValueFromReservation(_, dateTimeValue) {
+    function formatReservationTime(dateTimeValue) {
         const date = new Date(dateTimeValue);
         return date.toLocaleTimeString([], {
             hour: "2-digit",
@@ -116,15 +88,10 @@ async function loadUserImg() {
             hour12: false,
         });
     }
-    function setSelectValue(selectEl, value) {
-        const hasOption = Array.from(selectEl.options).some((option) => option.value === value);
-        if (!hasOption && value) {
-            const option = document.createElement("option");
-            option.value = value;
-            option.textContent = value;
-            selectEl.appendChild(option);
-        }
-        selectEl.value = value;
+    function formatReservationTimeRange(reservation) {
+        const startValue = formatReservationTime(reservation.startTime);
+        const endValue = formatReservationTime(reservation.endTime);
+        return `${startValue} - ${endValue}`;
     }
     function statusFor(res) {
         const status = (res.status ?? "upcoming").toString().toLowerCase();
@@ -193,7 +160,7 @@ async function loadUserImg() {
               class="seat-pill-remove"
               type="button"
               data-seat="${seat}"
-              ${draftSeatNumbers.length === 1 ? "disabled title=\"At least one seat must remain\"" : ""}
+              ${draftSeatNumbers.length === 1 ? 'disabled title="At least one seat must remain"' : ""}
             >
               <span class="material-symbols-outlined">close</span>
             </button>
@@ -240,8 +207,7 @@ async function loadUserImg() {
             return;
         const status = statusFor(reservation);
         const seatNumbers = getSeatNumbers(reservation);
-        const startValue = timeValueFromReservation(reservation.date, reservation.startTime);
-        const endValue = timeValueFromReservation(reservation.date, reservation.endTime);
+        const timeRange = formatReservationTimeRange(reservation);
         const viewItems = [
             { label: "Reservation ID", value: reservation._id },
             { label: "Laboratory", value: reservation.lab.room },
@@ -250,10 +216,7 @@ async function loadUserImg() {
                 value: reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A",
             },
             { label: "Date", value: formatDateLabel(toISODate(reservation.date)) },
-            {
-                label: "Time",
-                value: `${startValue} - ${endValue}`,
-            },
+            { label: "Time", value: timeRange },
             { label: "Seats", value: seatNumbers.length > 0 ? seatNumbers.join(", ") : "N/A" },
             { label: "Visibility", value: visibilityLabel(reservation) },
             { label: "Status", value: prettyStatus(status) },
@@ -264,44 +227,15 @@ async function loadUserImg() {
         els.editId.value = reservation._id;
         els.editLab.value = reservation.lab.room;
         els.editDate.value = formatLockedDate(reservation.date);
+        els.editTime.value = timeRange;
         els.editSeatInput.value = "";
         setDraftSeatNumbers(seatNumbers);
-        setSelectValue(els.editStart, startValue);
-        setSelectValue(els.editEnd, endValue);
         els.editAnon.checked = Boolean(reservation.isAnonymous);
-        syncEndTimes();
         setHidden(els.formError, true);
         setHidden(els.overlay, false);
         els.overlay.classList.add("is-open");
         document.body.classList.add("modal-open");
         setTab(mode);
-    }
-    function buildTimeOptions(selectEl) {
-        const startMin = 7 * 60;
-        const endMin = 21 * 60;
-        let html = "";
-        for (let mins = startMin; mins <= endMin; mins += 30) {
-            const value = hhmmFromMinutes(mins);
-            html += `<option value="${value}">${value}</option>`;
-        }
-        selectEl.innerHTML = html;
-    }
-    function syncEndTimes() {
-        if (!els.editStart.value)
-            return;
-        const start = minutesFromTimeValue(els.editStart.value);
-        const end = els.editEnd.value ? minutesFromTimeValue(els.editEnd.value) : -1;
-        const options = Array.from(els.editEnd.options);
-        options.forEach((option) => {
-            const optionMinutes = minutesFromTimeValue(option.value);
-            option.disabled = optionMinutes <= start;
-        });
-        if (end <= start || !els.editEnd.value) {
-            const firstValid = options.find((option) => !option.disabled);
-            if (firstValid) {
-                els.editEnd.value = firstValid.value;
-            }
-        }
     }
     function showError(message) {
         els.formError.textContent = message;
@@ -309,14 +243,14 @@ async function loadUserImg() {
     }
     async function refreshReservations() {
         const user = await ClientDBUtil.getCurrentUser();
-        if (user.role === "Admin") {
+        const currentUserRole = user.role ?? "Student";
+        isManager = currentUserRole === "Admin" || currentUserRole === "Lab Technician";
+        if (isManager) {
             reservations = await ClientDBUtil.getAllReservations();
         }
         else {
             reservations = await ClientDBUtil.getCurrentReservations();
         }
-        const currentUserRole = user.role;
-        isAdmin = currentUserRole === "Admin";
         render();
     }
     async function validateAndSaveEdit(event) {
@@ -326,21 +260,11 @@ async function loadUserImg() {
         const existing = reservations.find((reservation) => reservation._id === id);
         if (!existing)
             return;
-        const startTime = els.editStart.value;
-        const endTime = els.editEnd.value;
-        if (!startTime || !endTime) {
-            return showError("Please complete all required fields.");
-        }
         if (draftSeatNumbers.length === 0) {
             return showError("A reservation must keep at least one seat.");
         }
-        if (minutesFromTimeValue(endTime) <= minutesFromTimeValue(startTime)) {
-            return showError("End time must be after start time.");
-        }
         try {
             await ClientDBUtil.updateReservation(id, {
-                startTime,
-                endTime,
                 seatNumbers: draftSeatNumbers,
                 isAnonymous: els.editAnon.checked,
             });
@@ -396,9 +320,8 @@ async function loadUserImg() {
             return;
         }
         const userDisplay = document.querySelector("#displayUser");
-        if (isAdmin) {
-            if (userDisplay)
-                userDisplay.style.display = "block";
+        if (userDisplay) {
+            userDisplay.style.display = isManager ? "table-cell" : "none";
         }
         setHidden(els.emptyState, true);
         els.tbody.innerHTML = list
@@ -407,14 +330,15 @@ async function loadUserImg() {
             return `
           <tr>
             <td><b>${reservation._id}</b></td>
-           ${isAdmin && typeof reservation.user !== "string"
-                ? `<td>${reservation.user.firstName} ${reservation.user.lastName}</td>`
+            ${isManager
+                ? `<td>${typeof reservation.user === "string"
+                    ? reservation.user
+                    : `${reservation.user.firstName} ${reservation.user.lastName}`}</td>`
                 : ""}
-          <td>${reservation.lab.room}</td>
             <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
-            <td>${timeValueFromReservation(reservation.date, reservation.startTime)} - ${timeValueFromReservation(reservation.date, reservation.endTime)}</td>
+            <td>${formatReservationTimeRange(reservation)}</td>
             <td>Seat${seats.length > 1 ? "s" : ""} ${seats.join(", ")}</td>
             <td>${visibilityLabel(reservation)}</td>
             <td>
@@ -492,7 +416,6 @@ async function loadUserImg() {
         els.tabView.addEventListener("click", () => setTab("view"));
         els.tabEdit.addEventListener("click", () => setTab("edit"));
         els.editForm.addEventListener("submit", validateAndSaveEdit);
-        els.editStart.addEventListener("change", syncEndTimes);
         els.addSeatBtn.addEventListener("click", addSeatFromInput);
         els.editSeatInput.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
@@ -526,8 +449,6 @@ async function loadUserImg() {
         }
     }
     async function init() {
-        buildTimeOptions(els.editStart);
-        buildTimeOptions(els.editEnd);
         populateLabSelections();
         bindEvents();
         await Promise.all([hydrateProfileHeader(), refreshReservations()]);

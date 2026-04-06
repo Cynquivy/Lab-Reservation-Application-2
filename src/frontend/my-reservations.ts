@@ -10,7 +10,7 @@ const userID = sessionStorage.getItem("user");
 
 const profileImage = document.querySelector("#user-pic") as HTMLImageElement;
 
-let isAdmin = false;
+let isManager = false;
 
 async function loadUserImg() {
   try {
@@ -291,14 +291,14 @@ async function loadUserImg() {
   async function refreshReservations() {
     const user = await ClientDBUtil.getCurrentUser();
 
-    if (user.role === "Admin") {
+    const currentUserRole = user.role ?? "Student";
+    isManager = currentUserRole === "Admin" || currentUserRole === "Lab Technician";
+
+    if (isManager) {
       reservations = await ClientDBUtil.getAllReservations();
     } else {
       reservations = await ClientDBUtil.getCurrentReservations();
     }
-
-    const currentUserRole = user.role;
-    isAdmin = currentUserRole === "Admin";
 
     render();
   }
@@ -383,10 +383,10 @@ async function loadUserImg() {
       return;
     }
 
-    const userDisplay = document.querySelector("#displayUser") as HTMLElement;
+    const userDisplay = document.querySelector("#displayUser") as HTMLElement | null;
 
-    if (isAdmin) {
-      if (userDisplay) userDisplay.style.display = "block";
+    if (userDisplay) {
+      userDisplay.style.display = isManager ? "table-cell" : "none";
     }
 
     setHidden(els.emptyState, true);
@@ -398,14 +398,18 @@ async function loadUserImg() {
         return `
           <tr>
             <td><b>${reservation._id}</b></td>
-           ${
-             isAdmin && typeof reservation.user !== "string"
-               ? `<td>${(reservation.user as { firstName: string; lastName: string }).firstName} ${
-                   (reservation.user as { firstName: string; lastName: string }).lastName
-                 }</td>`
-               : ""
-           }
-          <td>${reservation.lab.room}</td>
+            ${
+              isManager
+                ? `<td>${
+                    typeof reservation.user === "string"
+                      ? reservation.user
+                      : `${(reservation.user as { firstName: string; lastName: string }).firstName} ${
+                          (reservation.user as { firstName: string; lastName: string }).lastName
+                        }`
+                  }</td>`
+                : ""
+            }
+            <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
             <td>${formatReservationTimeRange(reservation)}</td>

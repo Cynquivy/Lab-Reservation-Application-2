@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles/my-reservations.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script type="module" src="out/frontend/log-out.js" defer></script>
-    <title>My Reservations</title>
+    <title>Manage Reservations</title>
   </head>
 
   <body>
@@ -14,7 +14,7 @@
       <aside>
         <div class="top">
           <div class="logo">
-            <a href="dashboard.html"><img src="images/logo2.png" alt="Labynx logo"></a>
+            <a href="dashboard-admin.html"><img src="images/logo2.png" alt="Labynx logo"></a>
           </div>
           <div class="close" id="close-btn">
             <span class="material-symbols-outlined">close</span>
@@ -42,8 +42,8 @@
       <main>
         <div class="header">
           <div>
-            <h1>My Reservations</h1>
-            <p class="text-muted">View and edit your upcoming reservations.</p>
+            <h1>Manage Reservations</h1>
+            <p class="text-muted">View, update, and manage all reservations.</p>
           </div>
 
           <div class="profile">
@@ -51,8 +51,8 @@
               <img id="user-pic">  
             </div>
             <div class="info">
-              <p>Hello, <b>User</b></p>
-              <small class="text-muted">Admin</small>
+              <p>Hello, <b id="user-name">User</b></p>
+              <small class="text-muted" id="user-type">Admin</small>
             </div>
             <div class="dropdown-menu">
               <a href="profile.html">
@@ -157,9 +157,6 @@
                     <label for="filter-lab">Laboratory</label>
                     <select id="filter-lab">
                       <option value="ALL">All Labs</option>
-                      <option value="GK301">GK301</option>
-                      <option value="GK302A">GK302A</option>
-                      <option value="GK302B">GK302B</option>
                     </select>
                   </div>
 
@@ -186,8 +183,9 @@
                   <thead>
                     <tr>
                       <th>ID</th>
+                      <th style="display: none;" id="displayUser">User</th>
                       <th>Laboratory</th>
-                      <th>Date & Time</th>
+                      <th>Date & Time Requested</th>
                       <th>Date</th>
                       <th>Time</th>
                       <th>Seat</th>
@@ -237,43 +235,43 @@
             <div class="form-grid">
               <div class="form-field">
                 <label>Reservation ID</label>
-                <input id="edit-id" type="text" disabled>
+                <input id="edit-id" class="locked-field" type="text" disabled>
               </div>
 
               <div class="form-field">
                 <label>Laboratory</label>
-                <select id="edit-lab" disabled>
-                  <option value="GK301">GK301</option>
-                  <option value="GK302A">GK302A</option>
-                  <option value="GK302B">GK302B</option>
-                </select>
+                <input id="edit-lab" class="locked-field" type="text" disabled>
                 <small class="text-muted">Lab cannot be changed (delete + rebook for another lab).</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-date">Date</label>
-                <input id="edit-date" type="date" required>
+                <label>Date</label>
+                <input id="edit-date" class="locked-field" type="text" disabled>
+                <small class="text-muted">Date cannot be changed (cancel + rebook for another date).</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-seat">Seat</label>
-                <input id="edit-seat" type="number" min="1" step="1" required>
-                <small class="text-muted" id="seat-hint">Seat must be within lab capacity.</small>
+                <label for="edit-seat-input">Seats</label>
+                <div class="seat-editor">
+                  <input id="edit-seat-input" type="number" min="1" step="1" placeholder="Enter a seat number">
+                  <button class="action-btn seat-add-btn" id="add-seat-btn" type="button">Add Seat</button>
+                </div>
+                <div class="seat-pill-list" id="edit-seat-list"></div>
+                <small class="text-muted" id="seat-hint">Add or remove seats, but at least one seat must remain.</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-start">Start Time</label>
-                <select id="edit-start" required></select>
-              </div>
-
-              <div class="form-field">
-                <label for="edit-end">End Time</label>
-                <select id="edit-end" required></select>
+                <label>Time</label>
+                <input id="edit-time" class="locked-field" type="text" disabled>
+                <small class="text-muted">Time cannot be changed here (cancel + rebook for another slot).</small>
               </div>
 
               <div class="form-field form-field-inline">
-                <input id="edit-anon" type="checkbox">
-                <label for="edit-anon">Anonymous reservation</label>
+                <label class="toggle-control" for="edit-anon">
+                  <input id="edit-anon" type="checkbox">
+                  <span class="toggle-slider" aria-hidden="true"></span>
+                  <span>Anonymous reservation</span>
+                </label>
               </div>
             </div>
 
@@ -281,7 +279,6 @@
 
             <div class="modal-actions">
               <button class="action-btn" id="btn-cancel" type="button">Cancel</button>
-              <button class="action-btn warning" id="btn-delete" type="button">Delete</button>
               <button class="action-btn primary" id="btn-save" type="submit">
                 <span class="material-symbols-outlined">save</span>
                 Save Changes
@@ -293,5 +290,5 @@
     </div>
 
     <script type="module" src="out/frontend/my-reservations.js"></script>
-  </body>
+          </body>
 </html>
