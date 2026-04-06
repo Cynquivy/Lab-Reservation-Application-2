@@ -128,7 +128,7 @@ async function loadUserImg() {
     const parsed = new Date(trimmed);
 
     if (!Number.isNaN(parsed.getTime())) {
-      return parsed.getUTCHours() * 60 + parsed.getUTCMinutes();
+      return parsed.getHours() * 60 + parsed.getMinutes();
     }
 
     throw new Error("Invalid time format");
@@ -140,7 +140,7 @@ async function loadUserImg() {
     return `${pad2(h)}:${pad2(m)}`;
   }
 
-  function timeValueFromReservation(dateValue: string | Date, dateTimeValue: string | Date) {
+  function timeValueFromReservation(_: string | Date, dateTimeValue: string | Date) {/*
     const reservationDate = new Date(dateValue);
     const reservationDateTime = new Date(dateTimeValue);
 
@@ -150,9 +150,14 @@ async function loadUserImg() {
       if (minutes >= 0 && minutes <= 24 * 60) {
         return hhmmFromMinutes(minutes);
       }
-    }
+    }*/
+    const date = new Date(dateTimeValue);
 
-    return hhmmFromMinutes(minutesFromTimeValue(String(dateTimeValue)));
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
   }
 
   function setSelectValue(selectEl: HTMLSelectElement, value: string) {
