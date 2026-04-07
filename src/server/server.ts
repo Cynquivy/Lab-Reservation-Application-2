@@ -13,7 +13,6 @@ import Activity from './models/activity.model';
 import Building from './models/building.model';
 import { BUILDING_LABELS, LAB_SEAT_CONFIG, getLabsForBuildingFloor, normalizeBuildingCode, parseFloorNumber } from '../shared/labSeatConfig';
 import { promisify } from 'util';
-import { ClientDBUtil } from "../frontend/util/ClientDbUtil";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -1750,7 +1749,7 @@ app.get("/reservations/all", async (request: any, response) => {
 app.patch("/reservations/cancel", async (req, res) => {
     try {
         const { reservationIds } = req.body;
-        const user = await ClientDBUtil.getCurrentUser();
+        const user = await requireAuth(req);
 
         const reservations = await Reservation.find({
             _id: { $in: reservationIds }

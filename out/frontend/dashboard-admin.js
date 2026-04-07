@@ -231,19 +231,17 @@ function formatTime(dateInput) {
 }
 function generateTimeSlots() {
     const select = document.querySelector("#timeslot");
-    const startHour = 7;
+    const startHour = 8;
     const endHour = 18;
     const selectedDate = new Date(reserveDateInput.value);
     const now = new Date();
+    select.innerHTML = '<option value="">Select Time Slot</option>';
     for (let h = startHour; h < endHour; h++) {
         for (let m of [0, 30]) {
             if (h === endHour && m > 0)
                 continue;
             const start = new Date(selectedDate);
-            if (h === startHour)
-                start.setHours(7, 30, 0, 0);
-            else
-                start.setHours(h, m, 0, 0);
+            start.setHours(h, m, 0, 0);
             if (start < now)
                 continue;
             const end = new Date(start);
