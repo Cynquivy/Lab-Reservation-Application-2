@@ -245,6 +245,12 @@ async function loadUserImg() {
 
     if (!reservation) return;
 
+      const resStatus = statusFor(reservation);
+
+    if (resStatus === "CANCELLED") {
+      mode = "view";
+    }
+
     const status = statusFor(reservation);
     const seatNumbers = getSeatNumbers(reservation);
     const timeRange = formatReservationTimeRange(reservation);

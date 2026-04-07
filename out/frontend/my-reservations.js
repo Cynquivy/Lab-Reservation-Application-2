@@ -205,6 +205,10 @@ async function loadUserImg() {
         const reservation = reservations.find((item) => item._id === reservationID);
         if (!reservation)
             return;
+        const resStatus = statusFor(reservation);
+        if (resStatus === "CANCELLED") {
+            mode = "view";
+        }
         const status = statusFor(reservation);
         const seatNumbers = getSeatNumbers(reservation);
         const timeRange = formatReservationTimeRange(reservation);
