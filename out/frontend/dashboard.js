@@ -223,7 +223,7 @@ function formatTime(dateInput) {
 }
 function generateTimeSlots() {
     const select = document.querySelector("#timeslot");
-    const startHour = 7;
+    const startHour = 8;
     const endHour = 18;
     const selectedDate = new Date(reserveDateInput.value);
     const now = new Date();
