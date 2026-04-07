@@ -6,11 +6,7 @@ const DIV = `
             <div class="form">
                 <div class="form__content" id="sign-in-content">
                     <h1>Sign Up</h1>
-                    <button class="form__button" type="button">
-                        <i class="fa-brands fa-google"></i>
-                        Sign in with Google
-                    </button>
-                    <h2>or use your email password</h2>
+                    <h2>Please use your DLSU email</h2>
                     <p class="is-hidden form__error" id="error-sign-up">
                         <i class="fa-solid fa-circle-exclamation"></i>
                         Invalid Email or Password
@@ -37,11 +33,7 @@ const DIV = `
                         <h4 id="hiddable">Already have an account?</h4>
                         <button class="form__button form__button--outline" id="log-in-transition" type="button">Log In</button>
                         <h1>Log In</h1>
-                        <button class="form__button form__button--dark" type="button">
-                            <i class="fa-brands fa-google"></i>
-                            Log in with Google
-                        </button>
-                        <h2>or use your email password</h2>
+                        <h2>Please use your DLSU email</h2>
                         <p class="is-hidden form__error" id="error-log-in">
                             <i class="fa-solid fa-circle-exclamation"></i>
                             Invalid Email
