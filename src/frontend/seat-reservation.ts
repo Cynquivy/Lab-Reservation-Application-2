@@ -314,7 +314,7 @@ function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
             : `<p>By: <a href="profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
 
         const cancelButton = (currentUser?.role === "Admin" || currentUser?.role === "Lab Technician")
-            ? `<button class="cancel-seat-btn" data-reservation-id="${occupiedSeat.reservationId} data-seat-number="${occupiedSeat.seatNumber}">Cancel</button>`
+            ? `<button class="cancel-seat-btn" data-reservation-id="${occupiedSeat.reservationId}" data-seat-number="${occupiedSeat.seatNumber}">Cancel</button>`
             : "";
 
         return `
