@@ -234,7 +234,7 @@ function generateTimeSlots() {
                 continue;
             const start = new Date(selectedDate);
             if (h === startHour)
-                start.setHours(7, 30, 0, 0);
+                start.setHours(8, 0, 0, 0);
             else
                 start.setHours(h, m, 0, 0);
             if (start < now)
