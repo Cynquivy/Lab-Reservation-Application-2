@@ -28,21 +28,24 @@ let refreshTimer = null;
 let isAnonymousReservation = false;
 
 let authOkay = false;
+let currentUser = null;
 document.addEventListener("DOMContentLoaded", async () => {
     
     try {
         const response = await fetch("/auth/me");
         if (response.ok) {
+            const data = await response.json();
             authOkay = true;
+            currentUser = data; 
         }
     } catch (e) {
         authOkay = false;
     }
 
-    if (!room || !date || !startTime || !endTime || !buildingCode || !floor) {
-        renderFatalState("Missing reservation details. Please start from the availability page.");
-        return;
-    }
+        if (!room || !date || !startTime || !endTime || !buildingCode || !floor) {
+            renderFatalState("Missing reservation details. Please start from the availability page.");
+            return;
+        }
 
     renderHeader();
     renderControls();
@@ -246,6 +249,42 @@ function attachSeatEvents() {
             renderSeatMap();
         });
     });
+
+    displaySeat?.querySelectorAll(".cancel-seat-btn").forEach((btn) => {
+        btn.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
+            const reservationId = btn.getAttribute("data-reservation-id");
+
+            if (!reservationId) return;
+
+            const confirmCancel = confirm("Cancel this reservation?");
+            if (!confirmCancel) return;
+
+            try {
+                const response = await fetch("/reservations/cancel", {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        reservationIds: [reservationId]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Cancel failed");
+                }
+
+                showMessage("Reservation cancelled.", false);
+                await refreshSeatMap();
+            } catch (error) {
+                showMessage(error.message || "Error cancelling reservation", true);
+            }
+        });
+    });
 }
 
 function buildSeatSvg(seatNumber, isOccupied, isSelected) {
@@ -272,10 +311,15 @@ function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
             ? `<p>By: ${reserverName}</p>`
             : `<p>By: <a href="profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
 
+        const cancelButton = (currentUser?.role === "Admin" || currentUser?.role === "Lab Technician")
+            ? `<button class="cancel-seat-btn" data-reservation-id="${occupiedSeat._id}">Cancel</button>`
+            : "";
+
         return `
             <div class="seat-dropdown-chip">Reserved</div>
             ${userMarkup}
             <p class="seat-dropdown-time">${formatTimeRange(occupiedSeat.startTime, occupiedSeat.endTime)}</p>
+            ${cancelButton}
         `;
     }
 
