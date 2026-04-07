@@ -182,10 +182,12 @@ function updateRecentActivity(activities: any []) {
         const li = document.createElement('li');
         const timePassed = formatTimePassed(new Date(a.timestamp));
         let text = "";
-        if (a.action === "cancelled") {
-            text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName} by ${a.user.firstName} ${a.user.lastName}`;
+        if(a.action === "cancelled"){
+            text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
+        } else if (a.action === "admin-cancelled"){
+            text = `A moderator cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
         } else {
-            text = `Reserved Seat ${a.seatNumber} in ${a.labName} by ${a.user.firstName} ${a.user.lastName}`;
+            text = `Reserved Seat ${a.seatNumber} in ${a.labName}`;
         }
         li.innerHTML = `${text} <small>${timePassed}</small>`;
         activityList.appendChild(li);
