@@ -188,6 +188,8 @@ function updateRecentActivity(activities) {
             a.addEventListener("click", (e) => {
                 e.preventDefault();
                 visibleCount += 2;
+                if (visibleCount > 10)
+                    visibleCount = 10;
                 updateRecentActivity(activities);
             });
             viewMore.appendChild(a);
