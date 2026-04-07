@@ -212,21 +212,23 @@ function updateRecentActivity(activities: any[]){
         activityList.appendChild(li);
     });
 
-    if(visibleCount <= 10 && count > 3){
-        const viewMore = document.createElement('li');
-        viewMore.classList.add("view-more-activity");
+    if(visibleCount <= 10 && visibleCount < sortedActivities.length){
+        if(visibleCount < sortedActivities.length){
+            const viewMore = document.createElement('li');
+            viewMore.classList.add("view-more-activity");
 
-        const a = document.createElement('a');
-        a.textContent = "View More";
+            const a = document.createElement('a');
+            a.textContent = "View More";
 
-        a.addEventListener("click", (e) =>{
-            e.preventDefault();
-            visibleCount += 2;
-            updateRecentActivity(activities);
-        });
+            a.addEventListener("click", (e) =>{
+                e.preventDefault();
+                visibleCount += 2;
+                updateRecentActivity(activities);
+            });
 
-        viewMore.appendChild(a);
-        activityList.appendChild(viewMore);
+            viewMore.appendChild(a);
+            activityList.appendChild(viewMore);
+        }
     }
 }
 
